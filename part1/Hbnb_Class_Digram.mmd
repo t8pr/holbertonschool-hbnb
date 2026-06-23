@@ -1,0 +1,72 @@
+classDiagram
+    direction LR
+    class User {
+        +UUID4 Id
+        +String FirstName
+        +String LastName
+        +String Email
+        +String Passwrod
+        +Date BirthDate
+        +Int PhoneNum
+        +Boolean isAdmin
+        +Boolean isOwner
+        +Register()
+        +Update_profile_info()
+        +Delete_user()
+        +Auth()
+        +Histroy()
+    }
+
+    class favorite {
+        +Boolean isFavorite
+        +Create_favorite(id, place)
+    }
+
+    class Place {
+        +UUID4 Id
+        +String Title
+        +String Description
+        +Boolean Availability
+        +Float Price
+        +Float latitude
+        +Float Longitude
+        +Create_place()
+        +Update_place()
+        +Delete_place()
+        +List_place()
+    }
+
+    class DateTime {
+        +Datetime Create_date
+        +Datetime Update_date
+    }
+
+    class Review {
+        +UUID4 Id
+        +String Rating
+        +String Comment
+        +Create_review()
+        +Update_review()
+        +Delete_review()
+        +List_review()
+    }
+
+    class Amenities {
+        +UUID Id
+        +String Name
+        +String Description
+        +Create_amenities()
+        +Update_amenities()
+        +Delete_amenities()
+        +List_amenities()
+    }
+
+    User -- Place
+    favorite .. User
+    favorite .. Place
+    User -- DateTime
+    User -- Review
+    Place -- DateTime
+    Place --> Review
+    Place --> Amenities
+    Review -- DateTime
