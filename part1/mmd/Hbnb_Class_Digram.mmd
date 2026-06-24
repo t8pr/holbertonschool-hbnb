@@ -1,7 +1,8 @@
 classDiagram
     direction LR
+
     class User {
-        +UUID4 Id
+        +UUID Id
         +String FirstName
         +String LastName
         +String Email
@@ -17,13 +18,7 @@ classDiagram
         +Histroy()
     }
 
-    class favorite {
-        +Boolean isFavorite
-        +Create_favorite()
-    }
-
     class Place {
-        +UUID4 Id
         +String Title
         +String Description
         +Boolean Availability
@@ -36,13 +31,7 @@ classDiagram
         +List_place()
     }
 
-    class DateTime {
-        +Datetime Create_date
-        +Datetime Update_date
-    }
-
     class Review {
-        +UUID4 Id
         +String Rating
         +String Comment
         +Create_review()
@@ -52,7 +41,6 @@ classDiagram
     }
 
     class Amenities {
-        +UUID Id
         +String Name
         +String Description
         +Create_amenities()
@@ -61,12 +49,31 @@ classDiagram
         +List_amenities()
     }
 
-    User -- Place
-    favorite .. User
+    class favorite {
+        +Boolean isFavorite
+        +Create_favorite()
+    }
+
+    class DateTime {
+        +Datetime Create_date
+        +Datetime Update_date
+    }
+
+    User " 𝟏 " --> " 𝟎..* " Place
+    User " 𝟏 " --> " 𝟎..𝟏 " Review
+    Place " 𝟏 " --> " 𝟎..* " Review
+    Place " *..𝟏 " --> " 𝟏..* " Amenities
+    
+    User .. favorite
     favorite .. Place
-    User -- DateTime
-    User -- Review
-    Place -- DateTime
-    Place --> Review
-    Place --> Amenities
-    Review -- DateTime
+    
+    DateTime --* User
+    DateTime --* Place
+    DateTime --* Review
+
+    style User fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
+    style Place fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style Review fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style Amenities fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style favorite fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    style DateTime fill:#f5f5f5,stroke:#616161,stroke-width:2px,color:#000
