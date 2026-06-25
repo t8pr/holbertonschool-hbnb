@@ -1,2 +1,2 @@
 # holbertonschool-hbnb
-https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXN6M2NqZGFoZXpib3h1dTFuYjNyOXV5ZTMzM3l1YTkwbnNpZmozdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JIX9t2j0ZTN9S/giphy.gif
+<img width="480" height="480" alt="Cat Working GIF" src="https://github.com/user-attachments/assets/7f72ae81-239a-4f1d-b5ed-7078be38945f" />
