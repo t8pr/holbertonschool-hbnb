@@ -1,1 +1,2 @@
 # holbertonschool-hbnb
+https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXN6M2NqZGFoZXpib3h1dTFuYjNyOXV5ZTMzM3l1YTkwbnNpZmozdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JIX9t2j0ZTN9S/giphy.gif
