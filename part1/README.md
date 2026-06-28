@@ -1,0 +1,1 @@
+part1/SoftwareArchitecturePatterns/Hbnb_Seq_diagram_Fetching_list_of_Place.svg
