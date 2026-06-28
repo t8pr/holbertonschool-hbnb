@@ -1,1 +1,2 @@
 part1/SoftwareArchitecturePatterns/Hbnb_Seq_diagram_Fetching_list_of_Place.svg
+https://github.com/t8pr/holbertonschool-hbnb/blob/main/part1/SoftwareArchitecturePatterns/Hbnb_High_Level_Package_Diagram.svg
