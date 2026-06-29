@@ -2,9 +2,7 @@
 
 ## 1. Introduction
 
-HBnB is a simple rental platform inspired by Airbnb. It allows users to create places, add amenities, write reviews, save favorite places, and manage user information.
-
-This document explains the main design of the HBnB application before coding. It gives a clear overview of the system structure, main parts, relationships, and layers.
+HBnB is a simple rental platform inspired by Airbnb. It allows users to create places, add amenities, write reviews, save favorite places, and manage user information. This document explains the main design of the HBnB application before coding. It gives a clear overview of the system structure, main parts, relationships, and layers.
 
 The purpose of this document is to help developers understand how the application should be built in an organized and easy-to-maintain way.
 
@@ -14,7 +12,7 @@ The purpose of this document is to help developers understand how the applicatio
 
 The HBnB application is designed to manage the basic features of a rental platform. Users can register, update their profile, create places, write reviews, add amenities, and save places as favorites.
 
-The system also supports different user roles. Instead of using many Boolean attributes such as `isAdmin` and `isOwner`, the system uses a `UserRole` enum. This makes the design cleaner and easier to maintain.
+The system also supports different user roles. Instead of using many Boolean attributes such as `isOwner`, the system uses a `UserRole` enum. This makes the design cleaner and easier to maintain.
 
 The application is divided into layers. Each layer has a clear responsibility, which helps keep the project organized and easier to update later.
 
@@ -29,7 +27,6 @@ The main layers are:
 * Presentation Layer
 * Business Logic Layer
 * Persistence Layer
-* Core Entities
 
 ### 3.1 Presentation Layer
 
@@ -71,22 +68,6 @@ Its main responsibilities are:
 * Manage database communication
 
 This separation makes the system cleaner because the Business Logic Layer does not need to directly handle database details.
-
-### 3.4 Core Entities Package
-
-The Core Entities package contains the main classes used in the HBnB application.
-
-The main entities are:
-
-* User
-* UserRole
-* Place
-* Review
-* Amenity
-* Favorite
-
-These entities represent the main objects in the system and define their attributes, methods, and relationships.
-
 ---
 
 ## 4. Domain Model Design
@@ -96,7 +77,6 @@ The domain model represents the main objects used inside the HBnB application. T
 The main domain entities are:
 
 * User
-* UserRole
 * Place
 * Review
 * Amenity
@@ -108,27 +88,14 @@ Each entity has a clear responsibility. This helps keep the system organized and
 
 | Entity   | Description                                           | Main Responsibility                                                                 |
 | -------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| User     | Represents a person using the system.                 | Handles user information, authentication, profile updates, and user activity.       |
 | UserRole | Defines the permission level of a user.               | Controls whether the user is a normal user, owner                       |
 | Place    | Represents a rental place listed in the system.       | Stores place details such as title, description, price, location, and availability. |
 | Review   | Represents feedback written by a user about a place.  | Stores ratings and comments linked to users and places.                             |
 | Amenity  | Represents a feature or service available in a place. | Stores services such as Wi-Fi, parking, kitchen, or air conditioning.               |
 | Favorite | Represents a saved place.                             | Connects users with places they want to save for later.                             |
 
-### 4.2 User Role Design
 
-The system uses a `UserRole` enum instead of multiple Boolean attributes such as`isOwner`, or `isUser`. Using an enum also makes the system easier to expand later. For example, new roles such as `MODERATOR` or `SUPPORT` can be added without changing the whole user structure.
-
-This is a cleaner design because each user has one clear role.
-
-The available roles are:
-
-* `USER`: A normal user who can browse places, write reviews, and save favorite places.
-* `OWNER`: A Normal user who can also create and manage their own places.
-* `ADMIN`: A user with higher permissions who can manage users, places, reviews, and amenities.
-
-
-### 4.3 Entity Responsibilities
+### 4.2 Entity Responsibilities
 
 The `User` entity stores personal account information and role data. It is responsible for registration, authentication, profile updates, and user-related actions.
 
@@ -140,7 +107,7 @@ The `Amenity` entity stores available features that can be linked to places. A p
 
 The `Favorite` entity connects users with places they want to save. It works as a link between the User and Place entities.
 
-### 4.4 Design Rationale
+### 4.3 Design Rationale
 
 The domain model is designed to keep each entity focused on one main purpose.
 
@@ -150,13 +117,17 @@ The Favorite entity is treated as a separate entity because it represents a rela
 
 The Amenity entity is separated from Place because the same amenity can be used by many places. This avoids repeated data and keeps the design cleaner.
 
-### 4.5 Domain Model Summary
+User Role Design
 
-The domain model creates a clear structure for the HBnB application. Users can own places, write reviews, save favorites, and interact with amenities. Places can have reviews, amenities, and favorite records. Roles are managed through the UserRole enum to keep permissions simple and professional.
+The system uses a `UserRole` enum instead of multiple Boolean attributes such as`isOwner`, or `isUser`. Using an enum also makes the system easier to expand later. For example, new roles such as `MODERATOR` or `SUPPORT` can be added without changing the whole user structure.
 
-This design supports the main features of the system while keeping the application flexible for future changes.
+This is a cleaner design because each user has one clear role.
 
----
+The available roles are:
+
+* `USER`: A normal user who can browse places, write reviews, and save favorite places.
+* `OWNER`: A Normal user who can also create and manage their own places.
+* `ADMIN`: A user with higher permissions who can manage users, places, reviews, and amenities.
 
 ## 5. Entity Relationships
 
@@ -165,19 +136,17 @@ The entities in the HBnB system are connected to each other through clear relati
 The main relationships are:
 
 * User 1 → 0..* Place
-* User 1 → 0..* Review
-* Place 1 → 0..* Review
-* Place 0..* → 1..* Amenity
+* User 1 → 0-1 Review
+* Place 0.1 → 0..* Review
+* Place *..1 → 1..* Amenity
 * User 1 → 0..* Favorite
-* Place 1 → 0..* Favorite
-* User → UserRole
 
 ### Relationship Explanation
 
 A user can own many places.
 A place belongs to one user.
 
-A user can write many reviews.
+A user can write one review.
 A review belongs to one user.
 
 A place can have many reviews.
@@ -186,12 +155,9 @@ A review belongs to one place.
 A place can have many amenities.
 An amenity can be linked to many places.
 
-A user can save many favorite places.
-A place can be saved by many users.
-
 The Favorite entity works as a connection between User and Place.
 
-The UserRole enum is used by the User entity to define the user’s permission level.
+The UserRole enum is used by the User entity to define the user’s role.
 
 ---
 
@@ -209,7 +175,7 @@ The main business rules are:
 * A place must belong to an existing user.
 * A review must belong to an existing user and an existing place.
 * A rating should be within the allowed range.
-* An amenity can be linked to one or more places.
+* An amenity can be linked to one place.
 * A favorite must connect one user with one place.
 * A user should not save the same place as favorite more than once.
 * Empty or invalid data should not be accepted.
@@ -219,7 +185,7 @@ The main business rules are:
 
 ## 7. Sequence Diagrams
 
-The sequence diagrams describe how the main actions happen inside the HBnB system. They show how the user, Presentation Layer, Business Logic Layer, and Database interact step by step.
+The sequence diagrams describe how the main actions happen inside the HBnB system. They show how the user (Actor), Presentation Layer, Business Logic Layer, and Persistence Layer (Database) interact step by step.
 
 These diagrams are important because they explain the flow of requests before implementation. They also help developers understand which layer is responsible for each action.
 
@@ -288,58 +254,173 @@ This sequence represents the first entry point for users in the HBnB system. It 
 
 ---
 
-## 8. Class Diagram Notes
-
-The class diagram shows the main static structure of the HBnB system. It describes the classes, their attributes, methods, and relationships.
-
-### 8.1 User Class Design
-
-The User class should use:
-
-* Role: UserRole
-
-Instead of:
-
-* isAdmin: Boolean
-* isOwner: Boolean
-* isUser: Boolean
-
-This is more professional because the role is handled in one clear attribute. Also, `isUser` is not needed because every object created from the User class is already a user.
-
-### 8.2 Favorite Class Design
-
-The Favorite class should be treated as an entity that connects User and Place.
-
-A better design for Favorite is:
-
-* Id: UUID
-* Create_date: Datetime
-
-Main methods:
-
-* Create_favorite()
-* Delete_favorite()
-* List_favorites()
-
-The `isFavorite` attribute is optional and can be removed if the existence of the Favorite record already means the place is saved.
-
-### 8.3 Naming Improvements
-
-For a more professional UML diagram, class names should use singular form and start with a capital letter.
-
-Recommended changes:
-
-* favorite → Favorite
-* Amenities → Amenity
-* DataBase → Database
-* presentionLayer → Presentation Layer
-* Secces → Success
-* displaySeccesMassage → displaySuccessMessage
-
----
-
 ## 9. Conclusion
 
 This document explains the main design of the HBnB application. It describes the system architecture, package design, main entities, relationships, user roles, favorite feature, business rules, and sequence diagram flow.
 
 The document will be used as a guide during implementation. It helps developers build the application in a clean, organized, and maintainable way.
+
+
+7.2 Create Place Sequence Diagram
+
+This sequence shows how an owner creates a new place listing.
+
+7.2.1 Data Flow and Interactions
+
+1- Owner → Presentation Layer API:
+The owner enters place details such as title, description, price, location, availability, and amenities.
+
+2- Presentation Layer API → Business Logic Layer:
+The API sends the place data to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system validates the data and checks that the user has permission to create a place.
+
+4- Business Logic Layer → Persistence Layer / Database:
+If the data is valid, the new place is saved.
+
+5- Persistence Layer / Database → Business Logic Layer:
+The database confirms that the place was created.
+
+6- Business Logic Layer → Presentation Layer API → Owner:
+A success message is returned to the owner.
+
+7.2.2 Explanatory Notes
+
+Purpose:
+This diagram explains how a place is created and linked to its owner.
+
+Key Components:
+Owner, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
+
+Design Decisions:
+The system checks user permission before creating the place. This prevents normal users without the correct role from adding listings.
+
+Alternative Flow:
+If the user is not allowed to create places, or if required data such as title, price, or location is missing, the system returns an error.
+
+Architecture Fit:
+This sequence shows how the Business Logic Layer protects the system rules before storing new listing data.
+
+7.3 Create Review Sequence Diagram
+
+This sequence shows how a user writes a review for a place.
+
+7.3.1 Data Flow and Interactions
+
+1- User → Presentation Layer API:
+The user enters a rating and comment for a selected place.
+
+2- Presentation Layer API → Business Logic Layer:
+The API sends the review data to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system checks that the user exists, the place exists, and the rating is within the allowed range.
+
+4- Business Logic Layer → Persistence Layer / Database:
+If the review is valid, it is saved in the database.
+
+5- Persistence Layer / Database → Business Logic Layer:
+The database confirms that the review was stored.
+
+6- Business Logic Layer → Presentation Layer API → User:
+A success message is returned to the user.
+
+7.3.2 Explanatory Notes
+
+Purpose:
+This diagram explains how users add feedback to places.
+
+Key Components:
+User, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
+
+Design Decisions:
+The review must be connected to both an existing user and an existing place. The rating must also follow the allowed range.
+
+Alternative Flow:
+If the place does not exist, the rating is invalid, or the comment is missing, the system returns an error.
+
+Architecture Fit:
+This sequence supports the review feature while keeping validation inside the Business Logic Layer.
+
+7.4 Add Favorite Sequence Diagram
+
+This sequence shows how a user saves a place as a favorite.
+
+7.4.1 Data Flow and Interactions
+
+1- User → Presentation Layer API:
+The user selects a place and chooses to add it to favorites.
+
+2- Presentation Layer API → Business Logic Layer:
+The API sends the user ID and place ID to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system checks that the user exists, the place exists, and the place is not already saved by the same user.
+
+4- Business Logic Layer → Persistence Layer / Database:
+If the favorite does not already exist, a new favorite record is saved.
+
+5- Persistence Layer / Database → Business Logic Layer:
+The database confirms that the favorite was created.
+
+6- Business Logic Layer → Presentation Layer API → User:
+A success message is returned to the user.
+
+7.4.2 Explanatory Notes
+
+Purpose:
+This diagram explains how users save places they are interested in.
+
+Key Components:
+User, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
+
+Design Decisions:
+The Favorite entity connects a user with a place. The system prevents duplicate favorite records for the same user and place.
+
+Alternative Flow:
+If the place is already saved, or if the place does not exist, the system returns an error message.
+
+Architecture Fit:
+This sequence shows how the system manages saved places while keeping the relationship between User and Place clear.
+
+7.5 Add Amenity to Place Sequence Diagram
+
+This sequence shows how an amenity is added or linked to a place.
+
+7.5.1 Data Flow and Interactions
+
+1- Owner/Admin → Presentation Layer API:
+The owner or admin selects a place and chooses one or more amenities to add.
+
+2- Presentation Layer API → Business Logic Layer:
+The API sends the place ID and amenity data to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system checks that the place exists, the amenity exists, and the user has permission to update the place.
+
+4- Business Logic Layer → Persistence Layer / Database:
+If the request is valid, the amenity is linked to the place.
+
+5- Persistence Layer / Database → Business Logic Layer:
+The database confirms that the amenity was added.
+
+6- Business Logic Layer → Presentation Layer API → Owner/Admin:
+A success message is returned.
+
+7.5.2 Explanatory Notes
+
+Purpose:
+This diagram explains how amenities are connected to places.
+
+Key Components:
+Owner/Admin, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
+
+Design Decisions:
+Amenities are handled separately from places because the same amenity can be used by many listings. Permission is checked before updating the place.
+
+Alternative Flow:
+If the user does not have permission, the place does not exist, or the amenity is already linked, the system returns an error.
+
+Architecture Fit:
+This sequence supports the relationship between Place and Amenity while keeping updates controlled by the Business Logic Layer.
