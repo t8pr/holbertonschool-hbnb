@@ -1,0 +1,40 @@
+%%{init: {'theme': 'dark', 'themeVariables': { 'lineColor': '#ffffff', 'clusterBkg': 'transparent', 'clusterBorder': '#ffffff', 'mainBkg': 'transparent', 'nodeBorder': '#ffffff'}}}%%
+flowchart TD
+    %% Base styling to ensure transparent boxes and white text
+    classDef default fill:transparent,stroke:#ffffff,stroke-width:1px,color:#ffffff
+
+    %% Actor
+    User(("fa:fa-user<br>User"))
+
+    %% Presentation Layer
+    subgraph PL ["Presentation Layer"]
+        API["API"]
+    end
+
+    %% Business Logic Layer
+    subgraph BLL ["BusinessLogicLayer"]
+        %% Grid structure
+        PlaceS["Place Services"] ~~~ ValS["Validation Services"]
+        AuthS["Authentication Services"] ~~~ UserS["User Services"]
+        AmenS["Amenity Services"] ~~~ RevS["Review Services"]
+        
+        %% Vertical alignment enforcement
+        PlaceS ~~~ AuthS ~~~ AmenS
+        ValS ~~~ UserS ~~~ RevS
+    end
+
+    %% Persistence Layer
+    subgraph PerL ["PersistenceLayer"]
+        %% Grid structure
+        RevR["Review Repo"] ~~~ PlaceR["Place Repo"]
+        AmenR["Amenity Repo"] ~~~ UserR["User Repo"]
+        
+        %% Vertical alignment enforcement
+        RevR ~~~ AmenR
+        PlaceR ~~~ UserR
+    end
+
+    %% Relationships and Data Flow with HTML styled highlighted labels
+    User -.->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>User</span>"| PL
+    PL -->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>Facade Pattren</span>"| BLL
+    BLL -->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>Database Operations</span>"| PerL
