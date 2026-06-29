@@ -3,38 +3,53 @@ flowchart TD
     %% Base styling to ensure transparent boxes and white text
     classDef default fill:transparent,stroke:#ffffff,stroke-width:1px,color:#ffffff
 
-    %% Actor
-    User(("fa:fa-user<br>User"))
+    %% Actor (Using fa-male for a more "stick-figure" full-body appearance)
+    User(("fa:fa-male<br>User"))
 
-    %% Presentation Layer
-    subgraph PL ["Presentation Layer"]
-        API["API"]
-    end
-
-    %% Business Logic Layer
-    subgraph BLL ["BusinessLogicLayer"]
-        %% Grid structure
-        PlaceS["Place Services"] ~~~ ValS["Validation Services"]
-        AuthS["Authentication Services"] ~~~ UserS["User Services"]
-        AmenS["Amenity Services"] ~~~ RevS["Review Services"]
+    %% Main System Boundary
+    subgraph System ["HBnB System"]
         
-        %% Vertical alignment enforcement
-        PlaceS ~~~ AuthS ~~~ AmenS
-        ValS ~~~ UserS ~~~ RevS
-    end
+        %% Presentation Layer
+        subgraph PL ["Presentation Layer"]
+            Services["Services"] ~~~ API["API"]
+        end
 
-    %% Persistence Layer
-    subgraph PerL ["PersistenceLayer"]
-        %% Grid structure
-        RevR["Review Repo"] ~~~ PlaceR["Place Repo"]
-        AmenR["Amenity Repo"] ~~~ UserR["User Repo"]
+        %% Business Logic Layer
+        subgraph BLL ["BusinessLogicLayer"]
+            Facade["Facade"]
+            
+            subgraph Model ["Model Package"]
+                %% Grid layout for Model items
+                UserM["User"] ~~~ Place["Place"]
+                Favorite["Favorite"]
+                Amenity["Amenity"] ~~~ Review["Review"]
+                
+                %% Invisible links to force Favorite to the middle
+                UserM ~~~ Favorite
+                Place ~~~ Favorite
+                Favorite ~~~ Amenity
+                Favorite ~~~ Review
+            end
+            
+            %% Connection from Facade to the Model Package boundary
+            Facade --> Model
+        end
+
+        %% Persistence Layer
+        subgraph PerL ["PersistenceLayer"]
+            %% Grid structure
+            RevR["Review Repo"] ~~~ PlaceR["Place Repo"]
+            AmenR["Amenity Repo"] ~~~ UserR["User Repo"]
+            
+            %% Vertical alignment enforcement
+            RevR ~~~ AmenR
+            PlaceR ~~~ UserR
+        end
         
-        %% Vertical alignment enforcement
-        RevR ~~~ AmenR
-        PlaceR ~~~ UserR
+        %% Layer-to-Layer Connections with highlighted labels
+        PL -->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>Facade Pattren</span>"| BLL
+        BLL -->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>Database Operations</span>"| PerL
     end
 
-    %% Relationships and Data Flow with HTML styled highlighted labels
-    User -.->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>User</span>"| PL
-    PL -->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>Facade Pattren</span>"| BLL
-    BLL -->|"<span style='background-color:#333333; padding:2px 6px; border-radius:2px;'>Database Operations</span>"| PerL
+    %% Actor Connection to the System
+    User -.-> PL
