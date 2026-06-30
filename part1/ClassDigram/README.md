@@ -46,6 +46,5 @@ The entities are connected through explicit cardinality to ensure data integrity
 
 ---
 
-## Author
-
-Osama Alhamdan
+## Authors
+* **Osama Alhamdan** - [iEmanHamdan](https://github.com/t8pr)
