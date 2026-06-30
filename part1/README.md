@@ -72,6 +72,8 @@ This separation makes the system cleaner because the Business Logic Layer does n
 
 ## 4. Domain Model Design
 
+![alt text](Hbnb_Class_Diagram.svg)
+
 The domain model represents the main objects used inside the HBnB application. These objects describe the core data of the system and how each part is connected to the others.
 
 The main domain entities are:
@@ -193,21 +195,23 @@ These diagrams are important because they explain the flow of requests before im
 
 ## 7.1 User Registration Sequence Diagram
 
+![alt text](Seq-RegisterG11.svg)
+
 The user registration sequence explains how a new user creates an account in the HBnB application.
 
 ### 7.1.1 Data Flow and Interactions
 
-1- User → Presentation Layer API:
-The new user enters registration information such as first name, last name, email, password, birth date, and phone number.
+1- User → Presentation Layer:
+The new user enters registration information.
 
-2- Presentation Layer API → Business Logic Layer:
+2- Presentation Layer → Business Logic Layer:
 The API sends the user data to the Business Logic Layer using a registration request.
 
-3- Business Logic Layer → Business Logic Layer:
-The system validates the user data. It checks that all required fields are filled, the email format is valid, the password is acceptable, and the email is not already used by another account.
+3- Business Logic Layer:
+The system validates the user data. Like It checks that all required fields are filled.
 
 4- Business Logic Layer → Persistence Layer / Database:
-If the validation is successful, the Business Logic Layer sends the new user data to the database to be stored.
+The Business Logic Layer store the new user data to the database if the validation is successful.
 
 5- Database → Business Logic Layer:
 The database confirms that the new user was saved successfully.
@@ -225,10 +229,7 @@ This diagram explains how a new user registers in the HBnB system. It also shows
 
 2- Key Components Involved:
 
-* User
-* Presentation Layer API
-* Business Logic Layer
-* Persistence Layer / Database
+* User, Presentation Layer(API), Business Logic Layer, Persistence Layer(Database)
 
 3- Design Decisions and Rationale:
 
@@ -238,189 +239,138 @@ This diagram explains how a new user registers in the HBnB system. It also shows
 * The Business Logic Layer controls validation and account creation.
 * The database is only used after the data passes validation.
 
-4- Alternative Flow:
-
-If the email already exists or the user data is invalid, the system does not create the account. Instead, the Business Logic Layer returns an error message to the API, and the API shows the error to the user.
-
-Example errors:
-
-* “Email already exists.”
-* “Missing required fields.”
-* “Invalid email format.”
-* “Password is too weak.”
-
 5- How It Fits into the Overall Architecture:
-This sequence represents the first entry point for users in the HBnB system. It ensures that only valid and unique users are created. It also shows the responsibility of each layer clearly: the API receives the request, the Business Logic Layer applies the rules, and the database stores the final data.
+This sequence represents the first entry point for users in the HBnB system. It also shows the responsibility of each layer clearly: the API receives the request, the Business Logic Layer applies the rules, and the database stores the final data.
 
 ---
 
-## 9. Conclusion
+
+## 7.2 Create Place Sequence Diagram
+
+![alt text](Seq-RegisterG11-1.svg)
+
+This sequence shows how an owner creates a new place listing.
+
+### 7.2.1 Data Flow and Interactions
+
+1- Owner → Presentation Layer API:
+The owner enters place details such as title, description, price.
+
+2- Presentation Layer API → Business Logic Layer:
+The Presentation Layer sends the place data to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system validates the data and checks that the user has permission to create a place.
+
+4- Business Logic Layer → Persistence Layer(Database):
+If the data is valid, the new place is saved.
+
+5- Persistence Layer(Database) → Business Logic Layer:
+The database confirms that the place was created.
+
+6- Business Logic Layer → Presentation Layer → Owner:
+A success message is returned to the owner.
+
+### 7.2.2 Explanatory Notes
+
+Purpose:
+This diagram explains how a place is created and linked to its owner.
+
+Key Components:
+Owner, Presentation Layer(API), Business Logic Layer, Persistence Layer(Database).
+
+Design Decisions:
+The system checks user permission before creating the place. This prevents normal users without the correct role from adding listings.
+
+Architecture Fit:
+This sequence shows how the Business Logic Layer protects the system rules before storing new listing data.
+
+## 7.3 Create Review Sequence Diagram
+
+![alt text](G11.svg)
+
+This sequence shows how a user writes a review for a place.
+
+### 7.3.1 Data Flow and Interactions
+
+1- User → Presentation Layer:
+The user enters a rating and comment for a selected place.
+
+2- Presentation Layer → Business Logic Layer:
+The Presentation Layer sends the review data to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system checks that the user exists, the place exists, and the rating is within the allowed range.
+
+4- Business Logic Layer → Persistence Layer(Database):
+If the review is valid, it is saved in the database.
+
+5- Persistence Layer(Database) → Business Logic Layer:
+The database confirms that the review was stored.
+
+6- Business Logic Layer → Presentation Layer API → User:
+A success message is returned to the user.
+
+### 7.3.2 Explanatory Notes
+
+Purpose:
+This diagram explains how users add feedback to places.
+
+Key Components:
+User, Presentation Layer(API), Business Logic Layer, Persistence Layer(Database).
+
+Design Decisions:
+The review must be connected to both an existing user and an existing place. The rating must also follow the allowed range.
+
+Architecture Fit:
+This sequence supports the review feature while keeping validation inside the Business Logic Layer.
+
+## 7.4 Add Amenity to Place Sequence Diagram
+
+![alt text](F.png)
+
+This sequence shows how an amenity is added or linked to a place.
+
+### 7.4.1 Data Flow and Interactions
+
+1- Owner/Admin → Presentation Layer:
+The owner or admin selects a place and chooses one or more amenities to add.
+
+2- Presentation Layer → Business Logic Layer:
+The Presentation Layer sends the place ID and amenity data to the Business Logic Layer.
+
+3- Business Logic Layer:
+The system checks that the place exists, the amenity exists, and the user has permission to update the place.
+
+4- Business Logic Layer → Persistence Layer(Database):
+If the request is valid, the amenity is linked to the place.
+
+5- Persistence Layer(Database) → Business Logic Layer:
+The database confirms that the amenity was added.
+
+6- Business Logic Layer → Presentation Layer → Owner/Admin:
+A success message is returned.
+
+
+### 7.4.2 Explanatory Notes
+
+Purpose:
+This diagram explains how amenities are connected to places.
+
+Key Components:
+Owner/Admin, Presentation Layer(API), Business Logic Layer, Persistence Layer(Database).
+
+Design Decisions:
+Amenities are handled separately from places because the same amenity can be used by many listings. Permission is checked before updating the place.
+
+Architecture Fit:
+This sequence supports the relationship between Place and Amenity while keeping updates controlled by the Business Logic Layer.
+
+## 8. Conclusion
 
 This document explains the main design of the HBnB application. It describes the system architecture, package design, main entities, relationships, user roles, favorite feature, business rules, and sequence diagram flow.
 
 The document will be used as a guide during implementation. It helps developers build the application in a clean, organized, and maintainable way.
 
 
-7.2 Create Place Sequence Diagram
 
-This sequence shows how an owner creates a new place listing.
-
-7.2.1 Data Flow and Interactions
-
-1- Owner → Presentation Layer API:
-The owner enters place details such as title, description, price, location, availability, and amenities.
-
-2- Presentation Layer API → Business Logic Layer:
-The API sends the place data to the Business Logic Layer.
-
-3- Business Logic Layer:
-The system validates the data and checks that the user has permission to create a place.
-
-4- Business Logic Layer → Persistence Layer / Database:
-If the data is valid, the new place is saved.
-
-5- Persistence Layer / Database → Business Logic Layer:
-The database confirms that the place was created.
-
-6- Business Logic Layer → Presentation Layer API → Owner:
-A success message is returned to the owner.
-
-7.2.2 Explanatory Notes
-
-Purpose:
-This diagram explains how a place is created and linked to its owner.
-
-Key Components:
-Owner, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
-
-Design Decisions:
-The system checks user permission before creating the place. This prevents normal users without the correct role from adding listings.
-
-Alternative Flow:
-If the user is not allowed to create places, or if required data such as title, price, or location is missing, the system returns an error.
-
-Architecture Fit:
-This sequence shows how the Business Logic Layer protects the system rules before storing new listing data.
-
-7.3 Create Review Sequence Diagram
-
-This sequence shows how a user writes a review for a place.
-
-7.3.1 Data Flow and Interactions
-
-1- User → Presentation Layer API:
-The user enters a rating and comment for a selected place.
-
-2- Presentation Layer API → Business Logic Layer:
-The API sends the review data to the Business Logic Layer.
-
-3- Business Logic Layer:
-The system checks that the user exists, the place exists, and the rating is within the allowed range.
-
-4- Business Logic Layer → Persistence Layer / Database:
-If the review is valid, it is saved in the database.
-
-5- Persistence Layer / Database → Business Logic Layer:
-The database confirms that the review was stored.
-
-6- Business Logic Layer → Presentation Layer API → User:
-A success message is returned to the user.
-
-7.3.2 Explanatory Notes
-
-Purpose:
-This diagram explains how users add feedback to places.
-
-Key Components:
-User, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
-
-Design Decisions:
-The review must be connected to both an existing user and an existing place. The rating must also follow the allowed range.
-
-Alternative Flow:
-If the place does not exist, the rating is invalid, or the comment is missing, the system returns an error.
-
-Architecture Fit:
-This sequence supports the review feature while keeping validation inside the Business Logic Layer.
-
-7.4 Add Favorite Sequence Diagram
-
-This sequence shows how a user saves a place as a favorite.
-
-7.4.1 Data Flow and Interactions
-
-1- User → Presentation Layer API:
-The user selects a place and chooses to add it to favorites.
-
-2- Presentation Layer API → Business Logic Layer:
-The API sends the user ID and place ID to the Business Logic Layer.
-
-3- Business Logic Layer:
-The system checks that the user exists, the place exists, and the place is not already saved by the same user.
-
-4- Business Logic Layer → Persistence Layer / Database:
-If the favorite does not already exist, a new favorite record is saved.
-
-5- Persistence Layer / Database → Business Logic Layer:
-The database confirms that the favorite was created.
-
-6- Business Logic Layer → Presentation Layer API → User:
-A success message is returned to the user.
-
-7.4.2 Explanatory Notes
-
-Purpose:
-This diagram explains how users save places they are interested in.
-
-Key Components:
-User, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
-
-Design Decisions:
-The Favorite entity connects a user with a place. The system prevents duplicate favorite records for the same user and place.
-
-Alternative Flow:
-If the place is already saved, or if the place does not exist, the system returns an error message.
-
-Architecture Fit:
-This sequence shows how the system manages saved places while keeping the relationship between User and Place clear.
-
-7.5 Add Amenity to Place Sequence Diagram
-
-This sequence shows how an amenity is added or linked to a place.
-
-7.5.1 Data Flow and Interactions
-
-1- Owner/Admin → Presentation Layer API:
-The owner or admin selects a place and chooses one or more amenities to add.
-
-2- Presentation Layer API → Business Logic Layer:
-The API sends the place ID and amenity data to the Business Logic Layer.
-
-3- Business Logic Layer:
-The system checks that the place exists, the amenity exists, and the user has permission to update the place.
-
-4- Business Logic Layer → Persistence Layer / Database:
-If the request is valid, the amenity is linked to the place.
-
-5- Persistence Layer / Database → Business Logic Layer:
-The database confirms that the amenity was added.
-
-6- Business Logic Layer → Presentation Layer API → Owner/Admin:
-A success message is returned.
-
-7.5.2 Explanatory Notes
-
-Purpose:
-This diagram explains how amenities are connected to places.
-
-Key Components:
-Owner/Admin, Presentation Layer API, Business Logic Layer, Persistence Layer / Database.
-
-Design Decisions:
-Amenities are handled separately from places because the same amenity can be used by many listings. Permission is checked before updating the place.
-
-Alternative Flow:
-If the user does not have permission, the place does not exist, or the amenity is already linked, the system returns an error.
-
-Architecture Fit:
-This sequence supports the relationship between Place and Amenity while keeping updates controlled by the Business Logic Layer.
