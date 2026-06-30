@@ -91,7 +91,7 @@ Each entity has a clear responsibility. This helps keep the system organized and
 
 | Entity   | Description                                           | Main Responsibility                                                                 |
 | -------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| User | Defines the permission level of a user.               | Controls whether the user is a normal user, owner                       |
+| User | Represents a person using the system.               | Handles user information, authentication, profile updates, and user activity.                     |
 | Place    | Represents a rental place listed in the system.       | Stores place details such as title, description, price, location, and availability. |
 | Review   | Represents feedback written by a user about a place.  | Stores ratings and comments linked to users and places.                             |
 | Amenity  | Represents a feature or service available in a place. | Stores services such as Wi-Fi, parking, kitchen, or air conditioning.               |
