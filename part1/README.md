@@ -13,7 +13,11 @@ HBnB Evolution is structured around four primary entities: Users, Places, Review
 
 ---
 
-## 3. System Architecture and Package Design
+## 3. System Architectur:
+
+## 3.1 High Level Package Diagram
+
+![alt text](Hbnb_High_Level_Package_Diagram.svg)
 
 The HBnB system follows a layered architecture. This means the system is separated into different parts, and each part has a specific job.
 
@@ -23,7 +27,7 @@ The main layers are:
 * Business Logic Layer
 * Persistence Layer
 
-### 3.1 Presentation Layer
+### 3.1.1 Presentation Layer
 
 The Presentation Layer is responsible for receiving user requests and returning responses. In this project, it is represented by the API.
 
@@ -36,7 +40,7 @@ Its main responsibilities are:
 
 This layer does not contain the main business rules. Its role is mainly to connect the user with the system logic.
 
-### 3.2 Business Logic Layer
+### 3.1.2 Business Logic Layer
 
 The Business Logic Layer contains the main rules of the HBnB application. It manages the core operations related to users, places, reviews, amenities, and favorites.
 
@@ -50,7 +54,7 @@ Its main responsibilities are:
 
 This layer is important because it controls how the application behaves.
 
-### 3.3 Persistence Layer
+### 3.1.3 Persistence Layer
 
 The Persistence Layer is responsible for storing and retrieving data. It communicates with the database and keeps the data management separate from the rest of the system.
 
@@ -65,7 +69,9 @@ Its main responsibilities are:
 This separation makes the system cleaner because the Business Logic Layer does not need to directly handle database details.
 ---
 
-## 4. Domain Model Design
+# 3.2. Business Logic Layer
+
+## 3.2.1 Class Diagram:
 
 ![alt text](Hbnb_Class_Diagram.svg)
 
@@ -85,7 +91,7 @@ Each entity has a clear responsibility. This helps keep the system organized and
 
 | Entity   | Description                                           | Main Responsibility                                                                 |
 | -------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| UserRole | Defines the permission level of a user.               | Controls whether the user is a normal user, owner                       |
+| User | Defines the permission level of a user.               | Controls whether the user is a normal user, owner                       |
 | Place    | Represents a rental place listed in the system.       | Stores place details such as title, description, price, location, and availability. |
 | Review   | Represents feedback written by a user about a place.  | Stores ratings and comments linked to users and places.                             |
 | Amenity  | Represents a feature or service available in a place. | Stores services such as Wi-Fi, parking, kitchen, or air conditioning.               |
