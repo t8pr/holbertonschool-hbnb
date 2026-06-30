@@ -69,9 +69,9 @@ Its main responsibilities are:
 This separation makes the system cleaner because the Business Logic Layer does not need to directly handle database details.
 ---
 
-# 3.2. Business Logic Layer
+## 3.2. Business Logic Layer
 
-## 3.2.1 Class Diagram:
+### 3.2.1 Class Diagram
 
 ![alt text](Hbnb_Class_Diagram.svg)
 
@@ -87,7 +87,7 @@ The main domain entities are:
 
 Each entity has a clear responsibility. This helps keep the system organized and makes the application easier to understand, update, and maintain.
 
-### 4.1 Main Domain Entities
+### 3.2.2 Main Domain Entities
 
 | Entity   | Description                                           | Main Responsibility                                                                 |
 | -------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -98,7 +98,7 @@ Each entity has a clear responsibility. This helps keep the system organized and
 | Favorite | Represents a saved place.                             | Connects users with places they want to save for later.                             |
 
 
-### 4.2 Entity Responsibilities
+### 3.2.3 Entity Responsibilities
 
 The `User` entity stores personal account information and role data. It is responsible for registration, authentication, profile updates, and user-related actions.
 
@@ -110,7 +110,7 @@ The `Amenity` entity stores available features that can be linked to places. A p
 
 The `Favorite` entity connects users with places they want to save. It works as a link between the User and Place entities.
 
-### 4.3 Design Rationale
+### 3.2.4 Design Rationale
 
 The domain model is designed to keep each entity focused on one main purpose.
 
@@ -132,7 +132,7 @@ The available roles are:
 * `OWNER`: A Normal user who can also create and manage their own places.
 * `ADMIN`: A user with higher permissions who can manage users, places, reviews, and amenities.
 
-## 5. Entity Relationships
+### 3.2.5 Entity Relationships
 
 The entities in the HBnB system are connected to each other through clear relationships.
 
@@ -144,7 +144,7 @@ The main relationships are:
 * Place *..1 → 1..* Amenity
 * User 1 → 0..* Favorite
 
-### Relationship Explanation
+### 3.2.6 Relationship Explanation
 
 A user can own many places.
 A place belongs to one user.
@@ -164,7 +164,7 @@ The UserRole enum is used by the User entity to define the user’s role.
 
 ---
 
-## 6. Business Rules
+### 3.2.7 Business Rules
 
 The HBnB system follows clear business rules to keep the data correct, safe, and organized.
 
@@ -186,7 +186,7 @@ The main business rules are:
 
 ---
 
-## 7. Sequence Diagrams
+## 3.3 Sequence Diagrams for API Calls
 
 The sequence diagrams describe how the main actions happen inside the HBnB system. They show how the user (Actor), Presentation Layer, Business Logic Layer, and Persistence Layer (Database) interact step by step.
 
@@ -194,13 +194,13 @@ These diagrams are important because they explain the flow of requests before im
 
 ---
 
-## 7.1 User Registration Sequence Diagram
+### 3.3.1 User Registration Sequence Diagram
 
 ![alt text](Seq-RegisterG11.svg)
 
 The user registration sequence explains how a new user creates an account in the HBnB application.
 
-### 7.1.1 Data Flow and Interactions
+### 3.3.2 Data Flow and Interactions
 
 1- User → Presentation Layer:
 The new user enters registration information.
@@ -223,7 +223,7 @@ The Business Logic Layer returns an account creation confirmation to the API.
 7- Presentation Layer API → User:
 The API displays a success message to the user, such as “Account created successfully.”
 
-### 7.1.2 Explanatory Notes
+### 3.3.3 Explanatory Notes
 
 1- Purpose of the Diagram:
 This diagram explains how a new user registers in the HBnB system. It also shows how the system checks user data before creating the account.
@@ -246,13 +246,13 @@ This sequence represents the first entry point for users in the HBnB system. It 
 ---
 
 
-## 7.2 Create Place Sequence Diagram
+### 3.4.1 Create Place Sequence Diagram
 
 ![alt text](Seq-RegisterG11-1.svg)
 
 This sequence shows how an owner creates a new place listing.
 
-### 7.2.1 Data Flow and Interactions
+### 3.4.2  Data Flow and Interactions
 
 1- Owner → Presentation Layer API:
 The owner enters place details such as title, description, price.
@@ -272,7 +272,7 @@ The database confirms that the place was created.
 6- Business Logic Layer → Presentation Layer → Owner:
 A success message is returned to the owner.
 
-### 7.2.2 Explanatory Notes
+### 3.4.3 Explanatory Notes
 
 Purpose:
 This diagram explains how a place is created and linked to its owner.
@@ -286,13 +286,13 @@ The system checks user permission before creating the place. This prevents norma
 Architecture Fit:
 This sequence shows how the Business Logic Layer protects the system rules before storing new listing data.
 
-## 7.3 Create Review Sequence Diagram
+### 3.5.1 Create Review Sequence Diagram
 
 ![alt text](G11.svg)
 
 This sequence shows how a user writes a review for a place.
 
-### 7.3.1 Data Flow and Interactions
+### 3.5.2 Data Flow and Interactions
 
 1- User → Presentation Layer:
 The user enters a rating and comment for a selected place.
@@ -312,7 +312,7 @@ The database confirms that the review was stored.
 6- Business Logic Layer → Presentation Layer API → User:
 A success message is returned to the user.
 
-### 7.3.2 Explanatory Notes
+### 3.5.3 Explanatory Notes
 
 Purpose:
 This diagram explains how users add feedback to places.
@@ -326,13 +326,13 @@ The review must be connected to both an existing user and an existing place. The
 Architecture Fit:
 This sequence supports the review feature while keeping validation inside the Business Logic Layer.
 
-## 7.4 Add Amenity to Place Sequence Diagram
+### 3.6.1 Add Amenity to Place Sequence Diagram
 
 ![alt text](F.png)
 
 This sequence shows how an amenity is added or linked to a place.
 
-### 7.4.1 Data Flow and Interactions
+### 3.6.2 Data Flow and Interactions
 
 1- Owner/Admin → Presentation Layer:
 The owner or admin selects a place and chooses one or more amenities to add.
@@ -353,7 +353,7 @@ The database confirms that the amenity was added.
 A success message is returned.
 
 
-### 7.4.2 Explanatory Notes
+### 3.6.3 Explanatory Notes
 
 Purpose:
 This diagram explains how amenities are connected to places.
@@ -367,7 +367,7 @@ Amenities are handled separately from places because the same amenity can be use
 Architecture Fit:
 This sequence supports the relationship between Place and Amenity while keeping updates controlled by the Business Logic Layer.
 
-## 8. Conclusion
+## 4. Conclusion
 
 This document explains the main design of the HBnB application. It describes the system architecture, package design, main entities, relationships, user roles, favorite feature, business rules, and sequence diagram flow.
 
