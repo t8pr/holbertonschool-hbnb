@@ -2,19 +2,14 @@
 
 ## 1. Introduction
 
-HBnB is a simple rental platform inspired by Airbnb. It allows users to create places, add amenities, write reviews, save favorite places, and manage user information. This document explains the main design of the HBnB application before coding. It gives a clear overview of the system structure, main parts, relationships, and layers.
+This document serves as the foundational technical blueprint for the HBnB Evolution application, a simplified architectural clone of AirBnB. The scope of this phase covers the design of the high-level architecture, the detailed modeling of the Business Logic layer, and the step-by-step sequence of key API operations.
 
-The purpose of this document is to help developers understand how the application should be built in an organized and easy-to-maintain way.
-
+The goal is to establish clean boundaries between structural responsibilities, apply sound Object-Oriented Programming (OOP) and SOLID principles, and ensure the development phase has a precise design to follow.
 ---
 
 ## 2. System Overview
 
-The HBnB application is designed to manage the basic features of a rental platform. Users can register, update their profile, create places, write reviews, add amenities, and save places as favorites.
-
-The system also supports different user roles. Instead of using many Boolean attributes such as `isOwner`, the system uses a `UserRole` enum. This makes the design cleaner and easier to maintain.
-
-The application is divided into layers. Each layer has a clear responsibility, which helps keep the project organized and easier to update later.
+HBnB Evolution is structured around four primary entities: Users, Places, Reviews, and Amenities. The application allows users to register profiles, host or list properties, write reviews for visited places, and manage searchable amenities. To ensure robustness, maintainability, and loose coupling, the application utilizes a strict Layered Architecture unified by a Facade Pattern intercepting presentation-to-logic communication.
 
 ---
 
