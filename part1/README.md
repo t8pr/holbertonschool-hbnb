@@ -2,9 +2,8 @@
 
 ## 1. Introduction
 
-This document serves as the foundational technical blueprint for the HBnB Evolution application, a simplified architectural clone of AirBnB. The scope of this phase covers the design of the high-level architecture, the detailed modeling of the Business Logic layer, and the step-by-step sequence of key API operations.
+This document serves as the foundational technical blueprint for the HBnB Evolution application, a simplified architectural clone of AirBnB. The scope of this phase covers the design of the high-level architecture, the detailed modeling of the Business Logic layer, and the step-by-step sequence of key API operations. The goal is to establish clean boundaries between structural responsibilities, apply sound Object-Oriented Programming (OOP) and SOLID principles, and ensure the development phase has a precise design to follow.
 
-The goal is to establish clean boundaries between structural responsibilities, apply sound Object-Oriented Programming (OOP) and SOLID principles, and ensure the development phase has a precise design to follow.
 
 ---
 
