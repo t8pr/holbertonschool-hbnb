@@ -17,7 +17,7 @@ HBnB Evolution is structured around four primary entities: Users, Places, Review
 
 ## 3.1 High Level Package Diagram
 
-![alt text](Hbnb_High_Level_Package_Diagram.svg)
+![alt text](Package_Diagram/Hbnb_High_Level_Package_Diagram.svg)
 
 The HBnB system follows a layered architecture. This means the system is separated into different parts, and each part has a specific job.
 
@@ -73,7 +73,7 @@ This separation makes the system cleaner because the Business Logic Layer does n
 
 ### 3.2.1 Class Diagram
 
-![alt text](Hbnb_Class_Diagram.svg)
+![alt text](ClassDigram/Hbnb_Class_Diagram.svg) 
 
 The domain model represents the main objects used inside the HBnB application. These objects describe the core data of the system and how each part is connected to the others.
 
@@ -196,7 +196,7 @@ These diagrams are important because they explain the flow of requests before im
 
 ### 3.3.1 User Registration Sequence Diagram
 
-![alt text](Seq-RegisterG11.svg)
+![alt text](Seq_Digram/Seq-RegisterG11.svg)
 
 The user registration sequence explains how a new user creates an account in the HBnB application.
 
@@ -248,7 +248,7 @@ This sequence represents the first entry point for users in the HBnB system. It 
 
 ### 3.4.1 Create Place Sequence Diagram
 
-![alt text](Seq-RegisterG11-1.svg)
+![alt text](Seq_Digram/Seq-PlcaeCreationG11.svg)
 
 This sequence shows how an owner creates a new place listing.
 
@@ -288,7 +288,7 @@ This sequence shows how the Business Logic Layer protects the system rules befor
 
 ### 3.5.1 Create Review Sequence Diagram
 
-![alt text](G11.svg)
+![alt text](Seq_Digram/Seq-ReviewSubmissionG11.svg)
 
 This sequence shows how a user writes a review for a place.
 
@@ -328,7 +328,7 @@ This sequence supports the review feature while keeping validation inside the Bu
 
 ### 3.6.1 Add Amenity to Place Sequence Diagram
 
-![alt text](F.png)
+![alt text](Seq_Digram/Seq-Fetching_A_List_OF_PlaceG11.svg)
 
 This sequence shows how an amenity is added or linked to a place.
 
