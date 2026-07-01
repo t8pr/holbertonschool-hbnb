@@ -104,5 +104,5 @@ The user sends a request to view places. The Presentation Layer receives the req
 
 ---
 
-## Authors
+## Author
 * **Abdulrhman Alsalhi** - [ARAlsalhi](https://github.com/ARAlsalhi)
