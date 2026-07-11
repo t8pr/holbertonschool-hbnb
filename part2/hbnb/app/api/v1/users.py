@@ -13,7 +13,6 @@ user_model = api.model('User', {
     'isAdmin': fields.Boolean(required=True, description='Indicates if the user has admin privileges')
     
 })
-
 @api.route('/')
 class UserList(Resource):
 
