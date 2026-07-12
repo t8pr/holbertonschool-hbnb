@@ -5,7 +5,7 @@ api = Namespace('amenities', description='Amenity operations')
 
 # Define the amenity model for input validation and documentation
 amenity_model = api.model('Amenity', {
-    'id': fields.string(readonly=True, description='The unique identifier of an amenity'),
+    'id': fields.String(readonly=True, description='The unique identifier of an amenity'),
     'name': fields.String(required=True, description='Name of the amenity'),
     'description': fields.String(required=False, description='Description of the amenity')
     

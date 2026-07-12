@@ -13,7 +13,17 @@ class HBnBFacade:
 
     # --- USER OPERATIONS ---
     def create_user(self, user_data):
-        user = User(**user_data)
+        clean_data = {
+            'first_name': user_data.get('first_name'),
+            'last_name': user_data.get('last_name'),
+            'email': user_data.get('email')
+        }
+        
+        user = User(**clean_data)
+        
+        if 'User_Rule' in user_data:
+            user.user_rule = user_data['User_Rule']
+            
         self.user_repo.add(user)
         return user
 

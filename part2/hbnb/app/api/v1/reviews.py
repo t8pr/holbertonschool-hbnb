@@ -5,7 +5,7 @@ api = Namespace('reviews', description='Review operations')
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
-    'id': fields.string(readonly=True, description='The unique identifier of a review'),
+    'id': fields.String(readonly=True, description='The unique identifier of a review'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place'),
