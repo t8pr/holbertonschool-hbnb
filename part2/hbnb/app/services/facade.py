@@ -42,7 +42,12 @@ class HBnBFacade:
 
     # --- AMENITY OPERATIONS ---
     def create_amenity(self, amenity_data):
-        amenity = Amenity(**amenity_data)
+        clean_data = {
+            'name': amenity_data.get('name'),
+            'description': amenity_data.get('description', '')
+        }
+        
+        amenity = Amenity(**clean_data)
         self.amenity_repo.add(amenity)
         return amenity
 
