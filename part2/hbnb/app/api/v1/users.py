@@ -14,6 +14,8 @@ user_model = api.model('User', {
     'phoneNum': fields.Integer(required=False, description='Phone number of the user'),
     'User_Rule': fields.String(required=True, enum=['user', 'owner'], description='Role of the user', example='user')
 })
+<<<<<<< HEAD
+=======
 
 #  help function to serialize user data for responses (No need to repeat this part of code :) )
 # it called Data Transfer Object (DTO) 
@@ -43,6 +45,7 @@ def serialize_user(user):
     }
 
 
+>>>>>>> 196a0424d123b53e5f5d7879eb2674b5baa3c6e1
 @api.route('/')
 class UserList(Resource):
     """Resource for user list operations (Get, Post)"""
