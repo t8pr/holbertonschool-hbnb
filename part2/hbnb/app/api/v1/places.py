@@ -6,7 +6,7 @@ api = Namespace('places', description='Place operations')
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
     'id': fields.String(description='Amenity ID'),
-    'name': fields.String(description='Name of the amenity')
+    'name': fields.String(description='Name of the amenity'),
     'description': fields.String(description='Description of the amenity')
 })
 
@@ -30,8 +30,8 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True,min=-90,max=90, description='Latitude of the place'),
     'longitude': fields.Float(required=True,min=-180,max=180, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=False, description="List of amenities ID's")
-    'available': fields.Boolean(required=False, description='Availability status of the place')
+    'amenities': fields.List(fields.String, required=False, description="List of amenities ID's"),
+    'available': fields.Boolean(required=False, description='Availability status of the place'),
 })
 
 """This part is for PUT so no need to change the required field to True
