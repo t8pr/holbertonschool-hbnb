@@ -3,8 +3,9 @@ from app.models.basemodel import BaseModel
 class Place(BaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner_id):
         super().__init__()
-        if not title or len(title) > 100:
-            raise ValueError("Title is required and max 100 chars")
+        
+        if not title or len(title.strip()) == 0:
+            raise ValueError("Title cannot be empty")
         if price < 0:
             raise ValueError("Price must be a positive value")
         if not (-90.0 <= latitude <= 90.0):
@@ -14,16 +15,17 @@ class Place(BaseModel):
             
         self.title = title
         self.description = description
-        self.price = float(price)
-        self.latitude = float(latitude)
-        self.longitude = float(longitude)
-        self.owner_id = owner_id 
-        
-        self.reviews = [] 
-        self.amenities = [] 
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
+        self.owner_id = owner_id
+        self.reviews = []
+        self.amenities = []
 
-    def add_review(self, review):
-        self.reviews.append(review)
-
-    def add_amenity(self, amenity):
-        self.amenities.append(amenity)
+    @property
+    def owner(self):
+        """Return a proxy object for the owner."""
+        class OwnerProxy:
+            def __init__(self, owner_id):
+                self.id = owner_id
+        return OwnerProxy(self.owner_id)
