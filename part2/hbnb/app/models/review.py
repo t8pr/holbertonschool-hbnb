@@ -1,4 +1,4 @@
-from app.models.base_model import BaseModel
+from app.models.basemodel import BaseModel
 
 class Review(BaseModel):
     def __init__(self, text, rating, place_id, user_id):
