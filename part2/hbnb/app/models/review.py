@@ -18,6 +18,6 @@ class Review(BaseModel):
             "id": self.id,
             "text": self.text,
             "rating": self.rating,
-            "user_id": self.user.id if self.user else None,
-            "place_id": self.place.id if self.place else None
+            "user_id": self.user_id,
+            "place_id": self.place_id
         }
