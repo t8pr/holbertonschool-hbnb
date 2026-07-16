@@ -11,12 +11,9 @@ class Amenity(BaseModel):
         self.description = description
 
 
-        """
-        def to_dict(self):
-        """Convert the amenity object to a dictionary."""
+    def to_dict(self):
         return {
             "id": self.id,
             "name": self.name
         }
-        
-        """
+    

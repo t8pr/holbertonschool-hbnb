@@ -29,3 +29,47 @@ class Place(BaseModel):
             def __init__(self, owner_id):
                 self.id = owner_id
         return OwnerProxy(self.owner_id)
+
+    def to_dict(self, detailed=True):
+        """Return a dictionary representation."""
+        if not detailed:
+            return {
+                "id": self.id,
+                "title": self.title,
+                "latitude": self.latitude,
+                "longitude": self.longitude
+            }
+
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+
+            "owner": {
+                "id": self.owner.id,
+                "first_name": self.owner.first_name,
+                "last_name": self.owner.last_name,
+                "email": self.owner.email
+            },
+
+            "amenities": [
+                {
+                    "id": amenity.id,
+                    "name": amenity.name
+                }
+                for amenity in self.amenities
+            ],
+
+            "reviews": [
+                {
+                    "id": review.id,
+                    "text": review.text,
+                    "rating": review.rating,
+                    "user_id": review.user.id
+                }
+                for review in self.reviews
+            ]
+        }

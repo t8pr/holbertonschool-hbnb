@@ -2,7 +2,6 @@
 
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from part2.hbnb.app.models import place
 
 api = Namespace("places", description="Place operations")
 
@@ -39,7 +38,7 @@ place_model = api.model("Place", {
 
 @api.route("/")
 class PlaceList(Resource):
-    """Handle operations on all places."""
+    """Handle operations on all places"""
 
 @api.response(200,"List of places retrieved successfully")
 def get(self):
@@ -58,10 +57,20 @@ def post(self):
 
         try:
             new_place = facade.create_place(place_data)
-            return new_place.to_dict(), 201
-
+            
         except (ValueError, TypeError) as error:
             return {"error": str(error)}, 400
+
+
+        return {
+            "id": new_place.id,
+            "title": new_place.title,
+            "description": new_place.description,
+            "price": new_place.price,
+            "latitude": new_place.latitude,
+            "longitude": new_place.longitude,
+            "owner_id": new_place.owner.id
+        }, 201
 
 @api.route("/<string:place_id>")
 @api.param("place_id", "The unique identifier of the place")
@@ -78,43 +87,11 @@ def get(self, place_id):
         if not place:
             return {"error": "Place not found"}, 404
 
-        return {
-            "id": place.id,
-            "title": place.title,
-            "description": place.description,
-            "price": place.price,
-            "latitude": place.latitude,
-            "longitude": place.longitude,
-
-            "owner": {
-                "id": place.owner.id,
-                "first_name": place.owner.first_name,
-                "last_name": place.owner.last_name,
-                "email": place.owner.email
-            },
-
-            "amenities": [
-                {
-                    "id": amenity.id,
-                    "name": amenity.name
-                }
-                for amenity in place.amenities
-            ],
-
-            "reviews": [
-                {
-                    "id": review.id,
-                    "text": review.text,
-                    "rating": review.rating,
-                    "user_id": review.user.id
-                }
-                for review in place.reviews
-            ]
-        }, 200
+        return place.to_dict(detailed=True), 200
 
 """ return place.to_dict(), 200 """
 
-@api.expect(place_update_model,validate=True)
+@api.expect(place_model)
 @api.response(200,"Place successfully updated")
 @api.response(400, "Invalid input data")
 @api.response(404, "Place not found")
@@ -131,12 +108,10 @@ def put(self, place_id):
                 place_data
             )
 
-            if not updated_place:
-                return {"error": "Place not found"}, 404
-
-            return updated_place.to_dict(), 200
-
         except (ValueError, TypeError) as error:
-            return {
-                "error": str(error)
-            }, 400
+            return {"error": str(error)}, 400
+
+        if not updated_place:
+            return {"error": "Place not found"}, 404
+
+        return {"message": "Place updated successfully"}, 200
