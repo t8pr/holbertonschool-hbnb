@@ -1,0 +1,169 @@
+from flask_restx import Namespace, Resource, fields
+from flask import jsonify
+
+from app.services import facade
+
+
+api = Namespace("users", description="User operations")
+
+
+def json_response(data, status_code=200):
+    """Create a JSON response with a status code."""
+    response = jsonify(data)
+    response.status_code = status_code
+    return response
+
+
+user_model = api.model('User', {
+    'id': fields.String(readonly=True, description='The unique identifier of a user'),
+    'first_name': fields.String(required=True, description='First name of the user'),
+    'last_name': fields.String(required=True, description='Last name of the user'),
+    'email': fields.String(required=True, description='Email of the user'),
+})
+
+user_update_model = api.model('UserUpdate', {
+    'id': fields.String(readonly=False, description='The unique identifier of a user'),
+    'first_name': fields.String(required=False, description='First name of the user'),
+    'last_name': fields.String(required=False, description='Last name of the user'),
+    'email': fields.String(required=False, description='Email of the user'),
+})
+
+
+@api.route("/")
+class UserList(Resource):
+    """Resource for user list operations."""
+
+    @api.response(200, "Users successfully retrieved")
+    def get(self):
+        """Get all users."""
+        users = facade.get_all_users()
+
+        users_data = []
+
+        for user in users:
+            users_data.append({
+                "id": user.id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email
+            })
+
+        return json_response(users_data, 200)
+
+    @api.expect(user_model, validate=True)
+    @api.response(201, "User successfully created")
+    @api.response(400, "Email already registered")
+    @api.response(400, "Invalid input data")
+    def post(self):
+        """Create a new user account with a unique email."""
+        user_data = api.payload or {}
+
+        existing_user = facade.get_user_by_email(
+            user_data["email"]
+        )
+
+        if existing_user is not None:
+            return json_response(
+                {"error": "Email already registered"},
+                400
+            )
+
+        try:
+            new_user = facade.create_user(user_data)
+
+        except (ValueError, TypeError) as error:
+            return json_response(
+                {"error": str(error)},
+                400
+            )
+
+        return json_response({
+            "id": new_user.id,
+            "first_name": new_user.first_name,
+            "last_name": new_user.last_name,
+            "email": new_user.email
+        }, 201)
+
+
+@api.route("/<string:user_id>")
+@api.param(
+    "user_id",
+    "The unique identifier of the user"
+)
+class UserResource(Resource):
+    """Resource for individual user operations."""
+
+    @api.response(200, "User successfully retrieved")
+    @api.response(404, "User not found")
+    def get(self, user_id):
+        """Retrieve a user by ID."""
+        user = facade.get_user(user_id)
+
+        if user is None:
+            return json_response(
+                {"error": "User not found"},
+                404
+            )
+
+        return json_response({
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email
+        }, 200)
+
+    @api.expect(user_update_model, validate=True)
+    @api.response(200, "User successfully updated")
+    @api.response(400, "Email already registered")
+    @api.response(400, "Invalid input data")
+    @api.response(404, "User not found")
+    def put(self, user_id):
+        """Update an existing user."""
+        user = facade.get_user(user_id)
+
+        if user is None:
+            return json_response(
+                {"error": "User not found"},
+                404
+            )
+
+        user_data = api.payload or {}
+
+        if not user_data:
+            return json_response(
+                {"error": "No data provided for update"},
+                400
+            )
+
+        if "email" in user_data:
+            existing_user = facade.get_user_by_email(
+                user_data["email"]
+            )
+
+            if (
+                existing_user is not None
+                and existing_user.id != user_id
+            ):
+                return json_response(
+                    {"error": "Email already registered"},
+                    400
+                )
+
+        try:
+            updated_user = facade.update_user(
+                user_id,
+                user_data
+            )
+
+        except (ValueError, TypeError) as error:
+            return json_response(
+                {"error": str(error)},
+                400
+            )
+
+        return json_response({
+            "id": updated_user.id,
+            "first_name": updated_user.first_name,
+            "last_name": updated_user.last_name,
+            "email": updated_user.email
+        }, 200)
