@@ -15,20 +15,34 @@ class Place(BaseModel):
             
         self.title = title
         self.description = description
-        self.price = price
-        self.latitude = latitude
-        self.longitude = longitude
+        self.price = float(price)
+        self.latitude = float(latitude)
+        self.longitude = float(longitude)
         self.owner_id = owner_id
+        self._owner = None
         self.reviews = []
         self.amenities = []
 
     @property
     def owner(self):
-        """Return a proxy object for the owner."""
+        """Return the actual owner object if resolved, otherwise a proxy."""
+        if self._owner:
+            return self._owner
+        
         class OwnerProxy:
             def __init__(self, owner_id):
                 self.id = owner_id
+                self.first_name = "Unknown"
+                self.last_name = "User"
+                self.email = "unknown@example.com"
         return OwnerProxy(self.owner_id)
+
+    @owner.setter
+    def owner(self, user_obj):
+        """Allow setting the actual user object as the owner."""
+        self._owner = user_obj
+        if user_obj:
+            self.owner_id = user_obj.id
 
     def to_dict(self, detailed=True):
         """Return a dictionary representation."""
@@ -47,14 +61,12 @@ class Place(BaseModel):
             "price": self.price,
             "latitude": self.latitude,
             "longitude": self.longitude,
-
             "owner": {
                 "id": self.owner.id,
                 "first_name": self.owner.first_name,
                 "last_name": self.owner.last_name,
                 "email": self.owner.email
             },
-
             "amenities": [
                 {
                     "id": amenity.id,
@@ -62,13 +74,12 @@ class Place(BaseModel):
                 }
                 for amenity in self.amenities
             ],
-
             "reviews": [
                 {
                     "id": review.id,
                     "text": review.text,
                     "rating": review.rating,
-                    "user_id": review.user.id
+                    "user_id": review.user_id
                 }
                 for review in self.reviews
             ]
