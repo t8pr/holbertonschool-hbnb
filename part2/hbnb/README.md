@@ -117,6 +117,6 @@ Manual black-box testing can also be performed via **cURL**, Postman, or by inte
 
 ## Authors
 
-* **Abdulrhman Alsalhi**- [ARAlsalhi](https://github.com/ARAlsalhi).
-* **Osama Alhamdan** - [t8pr](https://github.com/t8pr).
+* **Abdulrhman Alsalhi**- [ARAlsalhi](https://github.com/ARAlsalhi)
+* **Osama Alhamdan** - [t8pr](https://github.com/t8pr)
 * **Eman Hamdan** - [iEmanHamdan](https://github.com/iEmanHamdan)
