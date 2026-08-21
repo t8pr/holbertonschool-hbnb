@@ -4,39 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HBnB - Login</title>
+    <!-- استدعاء أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-
     <header>
         <a href="index.html" class="logo">HBnB</a>
         <nav>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+            <a href="register.html" class="btn-outline">Sign Up</a>
         </nav>
     </header>
 
     <main class="login-container">
+        <!-- قسم الصورة -->
         <div class="login-image">
             <img src="imgs/img1.jpg" alt="Luxury Retreat Property">
         </div>
         
+        <!-- قسم النموذج -->
         <div class="login-form-wrapper">
             <div class="form-content">
-                <p style="font-size: 0.75rem; letter-spacing: 2px; color: #888; margin-bottom: 15px;">● WELCOME BACK</p>
-                <h1>Log in to your account</h1>
+                <h1>Welcome back</h1>
+                <p class="subtitle">Please enter your details to sign in.</p>
                 
                 <form id="login-form">
                     <div class="input-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="email"><i class="fa-regular fa-envelope"></i> Email address</label>
+                        <input type="email" id="email" name="email" placeholder="name@example.com" required>
                     </div>
                     
                     <div class="input-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                        <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
                     </div>
                     
-                    <button type="submit" class="submit-btn">Login ↗</button>
+                    <button type="submit" class="submit-btn">Log In</button>
+                    
+                    <p class="redirect-text">Don't have an account? <a href="register.html">Sign up for free</a></p>
                 </form>
             </div>
         </div>

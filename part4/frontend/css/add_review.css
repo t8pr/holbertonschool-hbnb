@@ -1,0 +1,199 @@
+/* استدعاء الخط بوزن 300 و 400 فقط لضمان عدم وجود أي خط عريض */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400&display=swap');
+
+:root {
+    --bg-cream: #fcfaf8;
+    --accent-green: #3a5a40;
+    --text-dark: #222222;
+    --text-muted: #717171;
+    --surface-white: #ffffff;
+    --border-soft: #e7e2d8;
+    --font-main: 'Quicksand', sans-serif;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-weight: 400; /* إجبار الوزن 400 على مستوى الصفحة بالكامل */
+}
+
+/* --- Header --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background-color: var(--surface-white);
+    border-bottom: 1px solid var(--border-soft);
+    z-index: 10;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 400; /* إجبار الوزن 400 */
+    text-decoration: none;
+    color: var(--accent-green);
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 400; /* إجبار الوزن 400 */
+    margin-left: 20px;
+    transition: 0.3s;
+}
+
+.btn-login {
+    border: 1px solid var(--text-dark);
+    padding: 8px 24px;
+    border-radius: 30px;
+}
+
+/* --- Main Layout --- */
+.add-review-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 5%;
+}
+
+.review-form-card {
+    width: 100%;
+    max-width: 550px;
+    background-color: var(--surface-white);
+    padding: 50px 40px;
+    border-radius: 24px;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+}
+
+/* --- Card Header & Icon --- */
+.card-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    background-color: var(--bg-cream);
+    color: var(--accent-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    margin: 0 auto 20px auto;
+    border: 1px solid var(--border-soft);
+}
+
+.card-header h1 {
+    font-size: 2.2rem;
+    font-weight: 400; /* إجبار الوزن 400 */
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.card-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 400; /* إجبار الوزن 400 */
+}
+
+/* --- Form Fields --- */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-weight: 400; /* إجبار الوزن 400 */
+}
+
+.input-group label i {
+    color: var(--accent-green);
+    margin-right: 8px;
+}
+
+.input-group select, 
+.input-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 400; /* إجبار الوزن 400 */
+    outline: none;
+    transition: all 0.3s ease;
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+}
+
+.input-group select {
+    cursor: pointer;
+}
+
+.input-group textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.input-group select:focus, 
+.input-group textarea:focus {
+    border-color: var(--accent-green);
+    background-color: var(--surface-white);
+    box-shadow: 0 0 0 3px rgba(58, 90, 64, 0.1);
+}
+
+/* --- Buttons & Links --- */
+.submit-btn {
+    background-color: var(--text-dark);
+    color: var(--surface-white);
+    border: none;
+    padding: 16px;
+    font-family: var(--font-main);
+    font-size: 1.1rem;
+    font-weight: 400; /* إجبار الوزن 400 */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-green);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(58, 90, 64, 0.2);
+}
+
+.cancel-link {
+    text-align: center;
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 400; /* إجبار الوزن 400 */
+    transition: color 0.3s;
+}
+
+.cancel-link:hover {
+    color: var(--text-dark);
+    text-decoration: underline;
+}

@@ -1,10 +1,11 @@
 import email
-from part4.backend.hbnb.app.persistence.repository import SQLAlchemyRepository
-from part4.backend.hbnb.app.persistence.user_repository import UserRepository
-from part4.backend.hbnb.app.models.user import User
-from part4.backend.hbnb.app.models.amenity import Amenity
-from part4.backend.hbnb.app.models.place import Place
-from part4.backend.hbnb.app.models.review import Review
+from app.persistence.repository import SQLAlchemyRepository
+from app.persistence.user_repository import UserRepository
+from app.models.user import User
+from app.models.amenity import Amenity
+from app.models.place import Place
+from app.models.review import Review
+from app.models.booking import Booking
 
 class HBnBFacade:
     def __init__(self):
@@ -12,6 +13,7 @@ class HBnBFacade:
         self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         self.amenity_repo = SQLAlchemyRepository(Amenity)
+        self.booking_repo = SQLAlchemyRepository(Booking)
 
     # --- USER OPERATIONS ---
     def create_user(self, user_data):
@@ -82,6 +84,13 @@ class HBnBFacade:
     def update_amenity(self, amenity_id, amenity_data):
         self.amenity_repo.update(amenity_id, amenity_data)
         return self.amenity_repo.get(amenity_id)
+    
+    def delete_amenity(self, amenity_id):
+        amenity = self.amenity_repo.get(amenity_id)
+        if not amenity:
+            return False
+        self.amenity_repo.delete(amenity_id)
+        return True
 
     # --- PLACE OPERATIONS ---
     def create_place(self, place_data):
@@ -94,6 +103,14 @@ class HBnBFacade:
             'owner_id': place_data.get('owner_id')
         }
         place = Place(**clean_data)
+        
+        # ربط وسائل الراحة (Amenities) بقاعدة البيانات
+        amenities_list = place_data.get('amenities', [])
+        for am_id in amenities_list:
+            amenity = self.amenity_repo.get(am_id)
+            if amenity:
+                place.amenities.append(amenity)
+                
         self.place_repo.add(place)
         return place
 
@@ -104,6 +121,18 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
+            
+        if 'amenities' in place_data:
+            amenity_ids = place_data.pop('amenities')
+            place.amenities = [] # تفريغ القديمة
+            for am_id in amenity_ids:
+                amenity = self.amenity_repo.get(am_id)
+                if amenity:
+                    place.amenities.append(amenity)
+                    
         self.place_repo.update(place_id, place_data)
         return self.place_repo.get(place_id)
 
@@ -135,3 +164,25 @@ class HBnBFacade:
             return False
         self.review_repo.delete(review_id) 
         return True
+
+    def delete_place(self, place_id):
+        place = self.place_repo.get(place_id)
+        if not place:
+            return False
+        self.place_repo.delete(place_id)
+        return True
+
+    def delete_user(self, user_id):
+        user = self.user_repo.get(user_id)
+        if not user:
+            return False
+        self.user_repo.delete(user_id)
+        return True
+
+    def create_booking(self, data):
+        booking = Booking(**data)
+        self.booking_repo.add(booking)
+        return booking
+
+    def get_bookings_by_user(self, user_id):
+        return self.booking_repo.model.query.filter_by(user_id=user_id).all()

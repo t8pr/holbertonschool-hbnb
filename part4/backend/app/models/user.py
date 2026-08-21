@@ -1,6 +1,6 @@
 import re
-from part4.backend.hbnb.app import bcrypt, db
-from part4.backend.hbnb.app.models.basemodel import BaseModel
+from app import bcrypt, db
+from app.models.basemodel import BaseModel
 
 class User(BaseModel):
     __tablename__ = 'users'
@@ -11,9 +11,9 @@ class User(BaseModel):
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    places = db.relationship('Place', backref='user', lazy=True)
-    reviews = db.relationship('Review', backref='user', lazy=True)
-
+    places = db.relationship('Place', backref='user', lazy=True, cascade="all, delete-orphan")
+    reviews = db.relationship('Review', backref='user', lazy=True, cascade="all, delete-orphan")
+    bookings = db.relationship('Booking', backref='user', lazy=True, cascade="all, delete-orphan")
     def __init__(self, first_name, last_name, email, password, is_admin=False, **kwargs):
         super().__init__(**kwargs)
         self.validate_user_data(first_name, last_name, email)

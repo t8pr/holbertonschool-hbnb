@@ -55,8 +55,7 @@ class PlaceList(Resource):
     def get(self):
         """Get all places"""
         places = facade.get_all_places()
-        return [place.to_dict(detailed=False) for place in places], 200
-
+        return [place.to_dict() for place in places], 200
     @api.expect(place_model, validate=True)
     @api.response(201, "Place successfully created")
     @api.response(400, "Invalid input data")
@@ -80,7 +79,7 @@ class PlaceList(Resource):
             "price": new_place.price,
             "latitude": new_place.latitude,
             "longitude": new_place.longitude,
-            "owner_id": new_place.owner.id
+            "owner_id": new_place.owner_id
         }, 201
 
 @api.route("/<string:place_id>")
@@ -95,7 +94,7 @@ class PlaceResource(Resource):
         place = facade.get_place(place_id)
         if not place:
             return {"error": "Place not found"}, 404
-        return place.to_dict(detailed=True), 200
+        return place.to_dict(), 200
 
     @api.expect(place_Update_model, validate=True)
     @api.response(200, "Place successfully updated")
@@ -126,3 +125,23 @@ class PlaceResource(Resource):
             return {"error": str(error)}, 400
 
         return {"message": "Place updated successfully"}, 200
+
+    @api.response(200, "Place successfully deleted")
+    @api.response(403, "Unauthorized action")
+    @api.response(404, "Place not found")
+    @jwt_required()
+    def delete(self, place_id):
+        """Delete a place"""
+        current_user = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get('is_admin', False)
+        
+        place = facade.get_place(place_id)
+        if not place:
+            return {"error": "Place not found"}, 404
+        
+        if not is_admin and place.owner_id != current_user:
+            return {'error': 'Unauthorized action'}, 403
+        
+        facade.delete_place(place_id)
+        return {"message": "Place deleted successfully"}, 200

@@ -1,136 +1,187 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-color: #ffffff;
-    --text-color: #333333;
-    --border-color: #eeeeee;
-    --primary-dark: #1a1a1a;
+    --bg-cream: #fcfaf8; /* لون كريمي أفتح وأكثر نعومة */
+    --accent-green: #3a5a40;
+    --accent-green-hover: #283618;
+    --text-dark: #222222;
+    --text-muted: #717171;
+    --surface-white: #ffffff;
+    
+    /* Quicksand هو الخط الأساسي لكل شيء الآن */
     --font-main: 'Quicksand', sans-serif;
+    --font-script: 'Great Vibes', cursive;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: var(--font-main);
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased; /* لجعل الخط أكثر نعومة على الشاشات */
 }
 
+/* Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 5%;
-    background-color: var(--bg-color);
-    border-bottom: 1px solid var(--border-color);
-    height: 70px;
+    padding: 25px 5%;
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    z-index: 20;
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 400;
+    text-decoration: none;
+    color: var(--accent-green);
+    letter-spacing: -0.5px;
+}
+
+.nav-links { display: flex; align-items: center; gap: 30px; }
+.nav-links a {
+    text-decoration: none;
+    color: var(--bg-cream);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: opacity 0.3s ease;
+    border: 2px solid #fff;
+    padding: 10px 25px;
+    border-radius: 25px;
+}
+.nav-links a:hover { opacity: 0.6; }
+
+.btn-login {
+    border: 2px solid var(--text-dark);
+    padding: 8px 24px;
+    border-radius: 30px; /* حواف دائرية ناعمة */
     font-weight: 700;
-    text-decoration: none;
-    color: var(--primary-dark);
+    transition: all 0.3s ease;
 }
+.btn-login:hover { background: var(--text-dark); color: var(--surface-white); }
 
-.login-button {
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: 500;
-}
+/* Hero Section */
+.hero { display: flex; min-height: 90vh; position: relative; }
 
-main {
+.hero-content {
     flex: 1;
-    padding: 40px 5%;
-}
-
-.controls {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.controls label {
-    margin-right: 15px;
-    font-weight: 500;
-}
-
-.controls select {
-    padding: 8px 15px;
-    font-family: var(--font-main);
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    outline: none;
-    cursor: pointer;
-}
-
-.places-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.place-card {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    padding: 120px 5% 80px 5%;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s, box-shadow 0.3s;
+    justify-content: center;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.script-text {
+    font-family: var(--font-script);
+    color: var(--accent-green);
+    font-size: 5rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    padding: 0 10px;
+}
+
+.hero-content p { font-size: 1.2rem; color: var(--text-muted); font-weight: 500; }
+
+.hero-image-wrapper { flex: 1; position: relative; }
+.hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; border-bottom-left-radius: 40px; }
+
+/* Floating Booking Bar */
+.booking-bar {
+    position: absolute;
+    bottom: -40px; left: 5%; width: 90%;
+    background: var(--surface-white);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.booking-field { display: flex; flex-direction: column; }
+.booking-field label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+.booking-field select, .booking-field span {
+    border: none; font-family: var(--font-main); font-size: 1.1rem; font-weight: 400; color: var(--text-dark); outline: none; cursor: pointer; background: transparent;
+}
+
+.btn-book-primary {
+    background: var(--accent-green); color: var(--surface-white);
+    border: none; padding: 16px 35px;
+    font-family: var(--font-main); font-weight: 700; font-size: 1rem;
+    border-radius: 30px; cursor: pointer;
+    box-shadow: 0 10px 20px rgba(58, 90, 64, 0.2);
+    transition: all 0.3s ease;
+}
+.btn-book-primary:hover { background: var(--accent-green-hover); transform: translateY(-2px); box-shadow: 0 15px 25px rgba(58, 90, 64, 0.3); }
+
+/* Main Places Section */
+main { padding: 120px 5% 80px 5%; }
+.section-title { font-size: 2.2rem; font-weight: 400; text-align: center; margin-bottom: 50px; color: var(--text-dark); letter-spacing: -0.5px; }
+
+/* 🌟 Smoother, Clearer Cards 🌟 */
+.places-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; }
+
+.place-card {
+    background: var(--surface-white);
+    border-radius: 24px; /* حواف أكثر دائرية ونعومة */
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); /* ظل ناعم جداً */
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* حركة انسيابية احترافية */
+    display: flex; flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.02);
 }
 
 .place-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transform: translateY(-10px); /* يرتفع لأعلى بنعومة */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-.place-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 15px;
+.card-img-wrapper {
+    width: 100%; height: 260px; position: relative; overflow: hidden;
 }
 
-.place-card h3 {
+.card-img-wrapper img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s ease;
+}
+.place-card:hover .card-img-wrapper img { transform: scale(1.05); }
+
+/* شارة السعر العائمة فوق الصورة */
+.card-price-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 15px;
+    border-radius: 20px;
     font-weight: 700;
-    margin-bottom: 5px;
+    color: var(--text-dark);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
+.card-price-badge span { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
 
-.place-card p {
-    color: #666;
-    margin-bottom: 15px;
-    flex: 1;
-}
+.card-info { padding: 25px; display: flex; flex-direction: column; flex: 1; }
+.card-info h3 { font-size: 1.4rem; font-weight: 400; margin-bottom: 20px; color: var(--text-dark); letter-spacing: -0.5px; }
 
-.details-button {
-    background-color: var(--primary-dark);
-    color: #fff;
-    text-align: center;
+.btn-view {
+    margin-top: auto;
+    font-weight: 700;
+    color: var(--accent-green);
     text-decoration: none;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
 }
-
-.details-button:hover {
-    opacity: 0.8;
-}
-
-footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 0.85rem;
-    color: #888;
-    border-top: 1px solid var(--border-color);
-}
+.place-card:hover .btn-view { gap: 12px; /* السهم يتحرك لليمين عند مرور الماوس */ }

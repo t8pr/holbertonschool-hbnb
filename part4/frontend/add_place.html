@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBnB - Add a New Place</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/add_place.css"> 
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">HBnB</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="account.html" id="account-link" style="display: none;">My Account</a>
+            <a href="login.html" id="login-link">Login</a>
+        </nav>
+    </header>
+
+    <main class="add-place-container">
+        <div class="place-form-card">
+            <h1>Host a New Place</h1>
+            
+            <form id="add-place-form" class="form-grid">
+                <div class="input-group full-width">
+                    <label>Title</label>
+                    <input type="text" id="place-title" placeholder="e.g., Cozy Beachfront Villa" required>
+                </div>
+
+                <!-- حقول الصور المتعددة -->
+                <div id="image-inputs-container" class="full-width">
+                    <div class="input-group">
+                        <label>Place Images (Add at least one URL)</label>
+                        <input type="url" class="place-image-url" placeholder="https://example.com/img1.jpg" required>
+                    </div>
+                </div>
+                <button type="button" id="add-more-imgs-btn" class="btn-manage-amenities full-width" style="margin-bottom: 15px;">
+                    <i class="fa-solid fa-plus"></i> Add another image
+                </button>
+
+                <div class="input-group full-width">
+                    <label>Description</label>
+                    <textarea id="place-description" placeholder="Describe the place..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Price per night ($)</label>
+                    <input type="number" id="place-price" step="0.01" min="1" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Latitude</label>
+                    <input type="number" id="place-lat" step="0.0001" min="-90" max="90" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Longitude</label>
+                    <input type="number" id="place-lng" step="0.0001" min="-180" max="180" required>
+                </div>
+
+                <!-- قسم الـ Amenities -->
+                <div class="input-group full-width" style="margin-top: 20px;">
+                    <label>Amenities</label>
+                    <div id="amenities-selection-wrapper" class="amenities-wrapper">
+                        <!-- سيتم حقن الـ Pills هنا -->
+                    </div>
+                    <button type="button" class="btn-manage-amenities" onclick="openAmenitiesModal()">
+                        <i class="fa-solid fa-sliders"></i> Manage Amenities
+                    </button>
+                </div>
+
+                <button type="submit" class="submit-btn">Publish Place</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal إدارة الـ Amenities -->
+    <div id="amenities-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Manage Amenities</h2>
+                <button class="btn-icon" onclick="closeAmenitiesModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="amenities-list-manage" style="margin-bottom: 30px;">
+                <!-- سيتم حقن قائمة الإدارة هنا -->
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-soft); margin-bottom: 20px;">
+            
+            <h3 style="margin-bottom: 15px;">Add / Edit Amenity</h3>
+            <form id="manage-amenity-form">
+                <input type="hidden" id="amenity-id-input">
+                <div class="input-group">
+                    <label>Amenity Name</label>
+                    <input type="text" id="amenity-name-input" required>
+                </div>
+                <div class="input-group">
+                    <label>Description (Optional)</label>
+                    <input type="text" id="amenity-desc-input">
+                </div>
+                <button type="submit" class="submit-btn" style="width: 100%; margin-top: 10px; padding: 12px;"><i class="fa-solid fa-check"></i> Save Amenity</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/scripts.js"></script>
+</body>
+</html>

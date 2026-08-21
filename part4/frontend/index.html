@@ -3,36 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBnB - Places</title>
+    <title>HBnB - Memorable Stays</title>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <header>
         <a href="index.html" class="logo">HBnB</a>
-        <nav>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="add_place.html" id="add-place-link" style="display: none;">Host a Place</a>
+            <a href="account.html" id="account-link" style="display: none;">My Account</a>
+            <a href="login.html" id="login-link" class="btn-login">Login</a>
         </nav>
     </header>
 
-    <main>
-        <section class="controls">
-            <label for="price-filter">Max Price:</label>
-            <select id="price-filter">
-                <option value="All">All</option>
-                <option value="10">$10</option>
-                <option value="50">$50</option>
-                <option value="100">$100</option>
-            </select>
-        </section>
+    <!-- Split View Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="script-text">Memorable</span><br>
+                Places for<br>
+                moments <span class="script-text">Rich</span><br>
+                in emotions
+            </h1>
+            <p>Book now and get the best prices</p>
+        </div>
 
+        <div class="hero-image-wrapper">
+            <img src="imgs/img3.jpg" alt="Featured Resort Property">
+        </div>
+        
+        <!-- Floating Booking & Filter Bar -->
+        <div class="booking-bar">
+            <div class="booking-field">
+                <label>Max Price</label>
+                <select id="price-filter">
+                    <option value="All">All Prices</option>
+                    <option value="50">Up to $50</option>
+                    <option value="100">Up to $100</option>
+                    <option value="200">Up to $200</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Places Section -->
+    <main>
+        <h2 class="section-title">Explore Available Places</h2>
         <section id="places-list" class="places-grid">
+            <!-- Dynamic cards injected via scripts.js -->
         </section>
     </main>
-
-    <footer>
-        <p>&copy; 2026 HBnB Evolution. All rights reserved.</p>
-    </footer>
 
     <script src="js/scripts.js"></script>
 </body>

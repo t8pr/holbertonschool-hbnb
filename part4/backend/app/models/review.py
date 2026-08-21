@@ -1,5 +1,5 @@
-from part4.backend.hbnb.app import db
-from part4.backend.hbnb.app.models.basemodel import BaseModel
+from app import db
+from app.models.basemodel import BaseModel
 from sqlalchemy.orm import validates
 
 class Review(BaseModel):

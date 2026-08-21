@@ -100,3 +100,22 @@ class UserResource(Resource):
             return updated_user.to_dict(), 200
         except (ValueError, TypeError) as error:
             return {"error": str(error)}, 400
+
+    @api.response(200, 'User successfully deleted')
+    @api.response(403, 'Unauthorized action')
+    @api.response(404, 'User not found')
+    @jwt_required()
+    def delete(self, user_id):
+        """Delete a user"""
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get('is_admin', False)
+        if not is_admin and user_id != current_user_id:
+            return {'error': 'Unauthorized action'}, 403
+        
+        user = facade.get_user(user_id)
+        if not user:
+            return {"error": "User not found"}, 404
+        
+        facade.delete_user(user_id)
+        return {"message": "User deleted successfully"}, 200

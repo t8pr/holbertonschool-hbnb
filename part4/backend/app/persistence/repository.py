@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from part4.backend.hbnb.app import db
+from app import db
 
 class Repository(ABC):
     @abstractmethod

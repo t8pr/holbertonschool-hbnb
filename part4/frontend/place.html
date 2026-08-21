@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBnB - Place Details</title>
+    
+    <!-- Flatpickr Library for elegant date picking -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/place.css">
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">HBnB</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="account.html" id="account-link" style="display: none;">My Account</a>
+            <a href="login.html" id="login-link" class="btn-login">Login</a>
+        </nav>
+    </header>
+
+    <main class="place-layout" id="place-details">
+        <!-- القسم الأيسر: التفاصيل والمراجعات -->
+        <div class="place-main-content">
+            <div class="photo-gallery-wrapper">
+                <div id="photo-gallery" class="photo-gallery">
+                </div>
+            </div>
+            
+            <div class="place-info" id="place-info">
+                <h1 id="place-title">Loading...</h1>
+                <div class="host-info">
+                    <span id="place-host">Hosted by ...</span>
+                </div>
+                <p id="place-description" class="description"></p>
+
+                <div class="amenities-section" style="margin-bottom: 50px; padding-bottom: 40px;">
+                    <h3 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 25px; color: var(--text-dark);">What this place offers</h3>
+                    <div id="place-amenities" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    </div>
+                </div>
+            </div>
+
+            <section class="reviews-section">
+                <div class="reviews-header">
+                    <h2>Guest Reviews</h2>
+                    <a href="#" id="add-review-btn" class="btn-primary" style="display: none; padding: 10px 20px;">Add Review</a>
+                </div>
+                <div id="reviews-list" class="reviews-grid">
+                    <!-- سيتم جلب المراجعات هنا -->
+                </div>
+            </section>
+        </div>
+
+        <!-- القسم الأيمن: بطاقة الحجز العائمة (Sticky Booking Card) -->
+        <aside class="booking-sidebar">
+            <div class="booking-card">
+                <div class="booking-price">
+                    <strong id="booking-price-display">$0</strong> <span>/ night</span>
+                </div>
+                
+                <form id="booking-form">
+                    <div class="date-picker-group">
+                        <div class="input-group">
+                            <label>Check-in</label>
+                            <input type="text" id="checkin-date" placeholder="Select date" required>
+                        </div>
+                        <div class="input-group" style="border-left: 1px solid var(--border-soft);">
+                            <label>Check-out</label>
+                            <input type="text" id="checkout-date" placeholder="Select date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group guests-group">
+                        <label>Guests</label>
+                        <select id="booking-guests">
+                            <option value="1">1 Guest</option>
+                            <option value="2" selected>2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                        </select>
+                    </div>
+
+                    <!-- تفاصيل السعر الإجمالي -->
+                    <div id="price-breakdown" class="price-breakdown" style="display: none;">
+                        <div class="price-row">
+                            <span id="calc-nights">...</span>
+                            <span id="calc-total">...</span>
+                        </div>
+                        <div class="price-row total-row">
+                            <span>Total</span>
+                            <strong id="final-total">...</strong>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-book-primary" style="width: 100%; margin-top: 20px;">Reserve Now</button>
+                </form>
+            </div>
+        </aside>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="js/scripts.js"></script>
+    <!-- Lightbox Modal لعرض كل الصور -->
+    <div id="lightbox-modal" class="lightbox-overlay">
+        <span class="close-lightbox" onclick="document.getElementById('lightbox-modal').style.display='none'">&times;</span>
+        <div class="lightbox-content" id="lightbox-content">
+            <!-- سيتم حقن الصور الكبيرة هنا -->
+        </div>
+    </div>
+</body>
+</html>
