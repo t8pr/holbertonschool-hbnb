@@ -1,4 +1,4 @@
-/* استدعاء خط Quicksand بوزن 300 و 400 فقط */
+
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400&display=swap');
 
 :root {
@@ -21,10 +21,10 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    font-weight: 400; /* إجبار الوزن 400 على كل شيء */
+    font-weight: 400; 
 }
 
-/* --- Header --- */
+
 header {
     display: flex;
     justify-content: space-between;
@@ -48,14 +48,14 @@ header {
 }
 .btn-outline:hover { background: var(--text-dark); color: var(--surface-white); }
 
-/* --- Main Split Container --- */
+
 .login-container {
     display: flex;
     flex: 1;
     height: calc(100vh - 80px);
 }
 
-/* --- Image Side --- */
+
 .login-image {
     flex: 1.2;
     display: none;
@@ -64,7 +64,7 @@ header {
 @media (min-width: 900px) { .login-image { display: block; } }
 .login-image img { width: 100%; height: 100%; object-fit: cover; }
 
-/* --- Form Side --- */
+
 .login-form-wrapper {
     flex: 1;
     display: flex;
@@ -80,7 +80,7 @@ header {
 
 form { display: flex; flex-direction: column; gap: 22px; }
 
-/* For Register Page Name Fields */
+
 .name-group { display: flex; gap: 15px; }
 .name-group .input-group { flex: 1; }
 
@@ -114,7 +114,7 @@ form { display: flex; flex-direction: column; gap: 22px; }
     box-shadow: 0 0 0 4px rgba(58, 90, 64, 0.08);
 }
 
-/* --- Submit Button --- */
+
 .submit-btn {
     background-color: var(--text-dark);
     color: var(--surface-white);
@@ -134,7 +134,7 @@ form { display: flex; flex-direction: column; gap: 22px; }
     box-shadow: 0 10px 25px rgba(58, 90, 64, 0.2);
 }
 
-/* --- Redirect Links --- */
+
 .redirect-text { 
     text-align: center; 
     margin-top: 15px; 

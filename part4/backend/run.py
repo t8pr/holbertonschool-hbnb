@@ -2,7 +2,7 @@ from app import create_app, db
 
 app = create_app()
 
-# إنشاء الجداول تلقائياً داخل سياق التطبيق
+
 with app.app_context():
     db.create_all()
 

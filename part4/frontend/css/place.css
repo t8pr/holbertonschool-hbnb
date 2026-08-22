@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-/* --- المتغيرات الأساسية لمطابقة التصميم العام --- */
+
 :root {
     --bg-cream: #fcfaf8;
     --accent-green: #3a5a40;
@@ -12,13 +12,13 @@
     --font-main: 'Quicksand', sans-serif;
 }
 
-/* --- الهيكل الرئيسي (Layout) --- */
+
 .place-layout {
     display: flex;
     max-width: 1200px;
     margin: 120px auto 80px;
     padding: 0 5%;
-    gap: 60px; /* مساحة تنفس أكبر بين المحتوى وشريط الحجز */
+    gap: 60px; 
     align-items: flex-start;
 }
 
@@ -27,7 +27,7 @@
     min-width: 0;
 }
 
-/* --- معرض الصور (Photo Gallery) --- */
+
 .photo-gallery-wrapper {
     position: relative;
     margin-bottom: 40px;
@@ -54,7 +54,7 @@
     grid-row: span 2;
 }
 
-/* تأثير التظليل الذكي: تظليل باقي الصور عند تمرير الماوس على المعرض */
+
 .photo-gallery:hover img {
     opacity: 0.8;
 }
@@ -89,7 +89,7 @@
     transform: translateY(-2px);
 }
 
-/* --- تفاصيل المكان (Info Section) --- */
+
 .place-info h1 {
     font-size: 2.8rem;
     font-weight: 400;
@@ -118,7 +118,7 @@
     margin-bottom: 50px;
 }
 
-/* --- المراجعات والتقييمات (Reviews Section) --- */
+
 .reviews-section {
     padding-top: 40px;
     border-top: 1px solid var(--border-soft);
@@ -198,7 +198,7 @@
     font-style: italic;
 }
 
-/* --- بطاقة الحجز العائمة (Booking Sticky Sidebar) --- */
+
 .booking-sidebar {
     width: 380px;
     position: sticky;
@@ -217,7 +217,7 @@
 .booking-price strong { font-size: 2rem; font-weight: 400; color: var(--text-dark); letter-spacing: -1px; }
 .booking-price span { color: var(--text-muted); font-weight: 400; font-size: 1.1rem; }
 
-/* حقول التواريخ والضيوف */
+
 .date-picker-group {
     display: flex;
     border: 1px solid var(--text-muted);
@@ -264,7 +264,7 @@
     font-weight: 500;
 }
 
-/* تفاصيل الأسعار (Price Breakdown) */
+
 .price-breakdown { 
     margin-top: 20px; 
     padding-top: 20px; 
@@ -286,7 +286,7 @@
     margin-bottom: 0; 
 }
 
-/* الأزرار العامة */
+
 .btn-primary {
     background: var(--accent-green);
     color: var(--surface-white);
@@ -308,7 +308,7 @@
     box-shadow: 0 10px 20px rgba(58, 90, 64, 0.2);
 }
 
-/* --- شاشة العرض الكامل (Lightbox) --- */
+
 .lightbox-overlay {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.92); z-index: 9999; overflow-y: auto; padding: 60px 10%;
@@ -321,13 +321,13 @@
 .lightbox-content { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
 .lightbox-content img { width: 100%; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
 
-/* --- تخصيص ألوان أداة التقويم Flatpickr --- */
+
 .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
     background: var(--accent-green) !important;
     border-color: var(--accent-green) !important;
 }
 
-/* --- التجاوب مع الشاشات (Responsive) --- */
+
 @media (max-width: 992px) {
     .place-layout {
         flex-direction: column;

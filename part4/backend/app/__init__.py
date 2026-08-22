@@ -20,7 +20,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     jwt.init_app(app)
     db.init_app(app)
 
-    # استيراد باقي مساحات العمل الحالية
+    
     from app.api.v1.users import api as users_ns
     from app.api.v1.auth import api as auth_ns
     from app.api.v1.amenities import api as amenities_ns

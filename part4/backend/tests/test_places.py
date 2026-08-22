@@ -31,7 +31,7 @@ class TestPlaceEndpoints(unittest.TestCase):
         response = self.client.post('/api/v1/places/', json={
             "title": "Invalid Place",
             "price": 50.0,
-            "latitude": 120.0,  # Invalid Input: Latitude should be between -90 and 90
+            "latitude": 120.0,  
             "longitude": 46.6753,
             "owner_id": self.owner.id
         })

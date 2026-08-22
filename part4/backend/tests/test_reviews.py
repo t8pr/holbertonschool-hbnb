@@ -45,7 +45,7 @@ class TestReviewEndpoints(unittest.TestCase):
         """Test creating a review with an invalid rating (out of 1-5 range)."""
         response = self.client.post('/api/v1/reviews/', json={
             "text": "Off the charts!",
-            "rating": 6,  # Invalid Input: Rating should be between 1 and 5
+            "rating": 6,  
             "user_id": self.user.id,
             "place_id": self.place.id
         })
@@ -56,7 +56,7 @@ class TestReviewEndpoints(unittest.TestCase):
     def test_create_review_empty_text(self):
         """Test creating a review with empty text."""
         response = self.client.post('/api/v1/reviews/', json={
-            "text": "",  # Invalid Input: Text cannot be empty
+            "text": "",  
             "rating": 4,
             "user_id": self.user.id,
             "place_id": self.place.id
@@ -67,7 +67,7 @@ class TestReviewEndpoints(unittest.TestCase):
 
     def test_get_all_reviews(self):
         """Test retrieving all reviews."""
-        # Create a review first
+        
         self.client.post('/api/v1/reviews/', json={
             "text": "Good place.",
             "rating": 4,

@@ -15,7 +15,7 @@ class HBnBFacade:
         self.amenity_repo = SQLAlchemyRepository(Amenity)
         self.booking_repo = SQLAlchemyRepository(Booking)
 
-    # --- USER OPERATIONS ---
+    
     def create_user(self, user_data):
         clean_data = {
             'first_name': user_data.get('first_name'),
@@ -65,7 +65,7 @@ class HBnBFacade:
         self.user_repo.update(user_id, clean_data)
         return self.user_repo.get(user_id)
 
-    # --- AMENITY OPERATIONS ---
+    
     def create_amenity(self, amenity_data):
         clean_data = {
             'name': amenity_data.get('name'),
@@ -92,7 +92,7 @@ class HBnBFacade:
         self.amenity_repo.delete(amenity_id)
         return True
 
-    # --- PLACE OPERATIONS ---
+    
     def create_place(self, place_data):
         clean_data = {
             'title': place_data.get('title'),
@@ -104,7 +104,7 @@ class HBnBFacade:
         }
         place = Place(**clean_data)
         
-        # ربط وسائل الراحة (Amenities) بقاعدة البيانات
+        
         amenities_list = place_data.get('amenities', [])
         for am_id in amenities_list:
             amenity = self.amenity_repo.get(am_id)
@@ -127,7 +127,7 @@ class HBnBFacade:
             
         if 'amenities' in place_data:
             amenity_ids = place_data.pop('amenities')
-            place.amenities = [] # تفريغ القديمة
+            place.amenities = [] 
             for am_id in amenity_ids:
                 amenity = self.amenity_repo.get(am_id)
                 if amenity:
@@ -136,7 +136,7 @@ class HBnBFacade:
         self.place_repo.update(place_id, place_data)
         return self.place_repo.get(place_id)
 
-    # --- REVIEW OPERATIONS ---
+    
     def create_review(self, review_data):
         review = Review(**review_data)
         self.review_repo.add(review)
@@ -157,7 +157,7 @@ class HBnBFacade:
         return self.review_repo.get(review_id)
 
     def delete_review(self, review_id):
-        # we need to handle the case where the review does not exist
+        
         
         review = self.review_repo.get(review_id)
         if not review:
@@ -186,3 +186,6 @@ class HBnBFacade:
 
     def get_bookings_by_user(self, user_id):
         return self.booking_repo.model.query.filter_by(user_id=user_id).all()
+
+    def get_bookings_by_place(self, place_id):
+        return self.booking_repo.model.query.filter_by(place_id=place_id).all()

@@ -145,3 +145,22 @@ class PlaceResource(Resource):
         
         facade.delete_place(place_id)
         return {"message": "Place deleted successfully"}, 200
+
+    @api.route("/<string:place_id>/bookings")
+    @api.param("place_id", "The unique identifier of the place")
+    class PlaceBookingList(Resource):
+        @api.response(200, "Booked dates retrieved successfully")
+        @api.response(404, "Place not found")
+        def get(self, place_id):
+            """Retrieve booked dates for a specific place to show availability"""
+            place = facade.get_place(place_id)
+            if not place:
+                return {"error": "Place not found"}, 404
+
+            bookings = facade.get_bookings_by_place(place_id)
+            
+            booked_dates = [
+                {"from": b.start_date.isoformat(), "to": b.end_date.isoformat()} 
+                for b in bookings
+            ]
+            return booked_dates, 200

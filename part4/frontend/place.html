@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HBnB - Place Details</title>
     
-    <!-- Flatpickr Library for elegant date picking -->
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/index.css">
@@ -23,7 +23,7 @@
     </header>
 
     <main class="place-layout" id="place-details">
-        <!-- القسم الأيسر: التفاصيل والمراجعات -->
+        
         <div class="place-main-content">
             <div class="photo-gallery-wrapper">
                 <div id="photo-gallery" class="photo-gallery">
@@ -50,12 +50,12 @@
                     <a href="#" id="add-review-btn" class="btn-primary" style="display: none; padding: 10px 20px;">Add Review</a>
                 </div>
                 <div id="reviews-list" class="reviews-grid">
-                    <!-- سيتم جلب المراجعات هنا -->
+                    
                 </div>
             </section>
         </div>
 
-        <!-- القسم الأيمن: بطاقة الحجز العائمة (Sticky Booking Card) -->
+        
         <aside class="booking-sidebar">
             <div class="booking-card">
                 <div class="booking-price">
@@ -84,7 +84,7 @@
                         </select>
                     </div>
 
-                    <!-- تفاصيل السعر الإجمالي -->
+                    
                     <div id="price-breakdown" class="price-breakdown" style="display: none;">
                         <div class="price-row">
                             <span id="calc-nights">...</span>
@@ -104,11 +104,42 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="js/scripts.js"></script>
-    <!-- Lightbox Modal لعرض كل الصور -->
+    
     <div id="lightbox-modal" class="lightbox-overlay">
         <span class="close-lightbox" onclick="document.getElementById('lightbox-modal').style.display='none'">&times;</span>
         <div class="lightbox-content" id="lightbox-content">
-            <!-- سيتم حقن الصور الكبيرة هنا -->
+            
+        </div>
+    </div>
+    
+    <div id="edit-review-modal" class="lightbox-overlay" style="display: none; align-items: center; justify-content: center;">
+        <div class="lightbox-content" style="background: var(--surface-white); padding: 40px; border-radius: 24px; max-width: 500px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="font-weight: 400; font-size: 1.8rem; color: var(--text-dark);"><i class="fa-regular fa-pen-to-square" style="color: var(--accent-green); margin-right: 10px;"></i> Edit Review</h2>
+                <span onclick="document.getElementById('edit-review-modal').style.display='none'" style="font-size: 2rem; cursor: pointer; color: var(--text-muted);">&times;</span>
+            </div>
+            
+            <form id="edit-review-form" style="display: flex; flex-direction: column; gap: 20px;">
+                <input type="hidden" id="edit-review-id">
+                
+                <div class="input-group">
+                    <label style="font-weight: 400; color: var(--text-dark); margin-bottom: 8px; display: block;"><i class="fa-solid fa-ranking-star" style="color: var(--accent-green); margin-right: 8px;"></i> Rating</label>
+                    <select id="edit-review-rating" required style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border-soft); font-family: var(--font-main); font-weight: 400; background: var(--bg-cream); outline: none;">
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Average</option>
+                        <option value="2">2 - Poor</option>
+                        <option value="1">1 - Terrible</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label style="font-weight: 400; color: var(--text-dark); margin-bottom: 8px; display: block;"><i class="fa-regular fa-comment-dots" style="color: var(--accent-green); margin-right: 8px;"></i> Your Review</label>
+                    <textarea id="edit-review-text" required style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border-soft); font-family: var(--font-main); font-weight: 400; background: var(--bg-cream); min-height: 120px; outline: none; resize: vertical;"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="padding: 16px; font-weight: 400; font-size: 1.1rem; width: 100%; margin-top: 10px;">Save Changes</button>
+            </form>
         </div>
     </div>
 </body>

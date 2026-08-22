@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-cream: #fcfaf8; /* لون كريمي أفتح وأكثر نعومة */
+    --bg-cream: #fcfaf8; 
     --accent-green: #3a5a40;
     --accent-green-hover: #283618;
     --text-dark: #222222;
     --text-muted: #717171;
     --surface-white: #ffffff;
     
-    /* Quicksand هو الخط الأساسي لكل شيء الآن */
+    
     --font-main: 'Quicksand', sans-serif;
     --font-script: 'Great Vibes', cursive;
 }
@@ -20,10 +20,10 @@ body {
     background-color: var(--bg-cream);
     color: var(--text-dark);
     min-height: 100vh;
-    -webkit-font-smoothing: antialiased; /* لجعل الخط أكثر نعومة على الشاشات */
+    -webkit-font-smoothing: antialiased; 
 }
 
-/* Header */
+
 header {
     display: flex;
     justify-content: space-between;
@@ -58,13 +58,13 @@ header {
 .btn-login {
     border: 2px solid var(--text-dark);
     padding: 8px 24px;
-    border-radius: 30px; /* حواف دائرية ناعمة */
+    border-radius: 30px; 
     font-weight: 700;
     transition: all 0.3s ease;
 }
 .btn-login:hover { background: var(--text-dark); color: var(--surface-white); }
 
-/* Hero Section */
+
 .hero { display: flex; min-height: 90vh; position: relative; }
 
 .hero-content {
@@ -98,7 +98,7 @@ header {
 .hero-image-wrapper { flex: 1; position: relative; }
 .hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; border-bottom-left-radius: 40px; }
 
-/* Floating Booking Bar */
+
 .booking-bar {
     position: absolute;
     bottom: -40px; left: 5%; width: 90%;
@@ -126,25 +126,25 @@ header {
 }
 .btn-book-primary:hover { background: var(--accent-green-hover); transform: translateY(-2px); box-shadow: 0 15px 25px rgba(58, 90, 64, 0.3); }
 
-/* Main Places Section */
+
 main { padding: 120px 5% 80px 5%; }
 .section-title { font-size: 2.2rem; font-weight: 400; text-align: center; margin-bottom: 50px; color: var(--text-dark); letter-spacing: -0.5px; }
 
-/* 🌟 Smoother, Clearer Cards 🌟 */
+
 .places-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; }
 
 .place-card {
     background: var(--surface-white);
-    border-radius: 24px; /* حواف أكثر دائرية ونعومة */
+    border-radius: 24px; 
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); /* ظل ناعم جداً */
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* حركة انسيابية احترافية */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); 
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
     display: flex; flex-direction: column;
     border: 1px solid rgba(0,0,0,0.02);
 }
 
 .place-card:hover {
-    transform: translateY(-10px); /* يرتفع لأعلى بنعومة */
+    transform: translateY(-10px); 
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
@@ -158,7 +158,7 @@ main { padding: 120px 5% 80px 5%; }
 }
 .place-card:hover .card-img-wrapper img { transform: scale(1.05); }
 
-/* شارة السعر العائمة فوق الصورة */
+
 .card-price-badge {
     position: absolute;
     top: 20px; right: 20px;
@@ -184,4 +184,4 @@ main { padding: 120px 5% 80px 5%; }
     gap: 8px;
     transition: gap 0.3s ease;
 }
-.place-card:hover .btn-view { gap: 12px; /* السهم يتحرك لليمين عند مرور الماوس */ }
+.place-card:hover .btn-view { gap: 12px;  }

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Helper Functions ---
+    
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return { desc, urls };
     }
 
-    // دالة ذكية لاختيار أيقونة FontAwesome المناسبة بناءً على اسم الـ Amenity
+    
     function getAmenityIcon(name) {
         const n = name.toLowerCase();
         if (n.includes('wifi') || n.includes('internet')) return 'fa-wifi';
@@ -48,10 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (n.includes('kitchen') || n.includes('cook')) return 'fa-kitchen-set';
         if (n.includes('gym') || n.includes('fitness')) return 'fa-dumbbell';
         if (n.includes('breakfast') || n.includes('coffee')) return 'fa-mug-saucer';
-        return 'fa-check-circle'; // الأيقونة الافتراضية
+        return 'fa-check-circle'; 
     }
 
-    // --- 2. Navbar Management ---
+    
     const loginLink = document.getElementById('login-link');
     const addPlaceLink = document.getElementById('add-place-link');
     const accountLink = document.getElementById('account-link');
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (accountLink) accountLink.style.display = 'none';
     }
 
-    // --- 3. Login Flow ---
+    
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 4. Index Page: Places List ---
+    
     const placesList = document.getElementById('places-list');
     const priceFilter = document.getElementById('price-filter');
     
@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlaces();
     }
 
-    // --- 5. Place Details & Booking Page ---
+    
+    
     const placeDetailsContainer = document.getElementById('place-details');
     
     if (placeDetailsContainer) {
@@ -153,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const addReviewBtn = document.getElementById('add-review-btn');
         const reviewsList = document.getElementById('reviews-list');
         let currentPlacePrice = 0; 
+        let bookedDates = []; 
 
         if (token && addReviewBtn) {
             addReviewBtn.style.display = 'inline-block';
@@ -160,8 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (placeId) {
-            fetchPlaceDetails(placeId);
-            fetchPlaceReviews(placeId);
+            fetchPlaceBookedDates(placeId).then(() => {
+                fetchPlaceDetails(placeId);
+                fetchPlaceReviews(placeId);
+            });
         } else {
             document.getElementById('place-title').innerText = "Place not found.";
         }
@@ -170,7 +174,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('lightbox-modal').style.display = 'block';
         };
 
+        
+        async function fetchPlaceBookedDates(id) {
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}/bookings`);
+                if (response.ok) {
+                    bookedDates = await response.json(); 
+                }
+            } catch (error) { console.error("Could not fetch booked dates."); }
+        }
+
         async function fetchPlaceDetails(id) {
+            
             try {
                 const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}`);
                 if (response.ok) {
@@ -180,11 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('place-title').innerText = place.title;
                     document.getElementById('booking-price-display').innerText = `$${place.price}`;
                     
-                    // استخراج الوصف ومصفوفة الصور
                     const { desc, urls } = extractData(place.description);
                     document.getElementById('place-description').innerText = desc;
 
-                    // 1. بناء معرض الصور (Gallery)
                     const galleryContainer = document.getElementById('photo-gallery');
                     galleryContainer.innerHTML = '';
                     
@@ -213,42 +226,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         lightboxContent.innerHTML = urls.map(u => `<img src="${u}">`).join('');
                     }
 
-                    // 2. عرض وسائل الراحة (Amenities) - الكود الجديد تم إضافته هنا
                     const amenitiesContainer = document.getElementById('place-amenities');
                     if (amenitiesContainer) {
                         amenitiesContainer.innerHTML = ''; 
-                        
                         if (place.amenities && place.amenities.length > 0) {
                             place.amenities.forEach(am => {
                                 amenitiesContainer.innerHTML += `
-                                    <div style="display: flex; align-items: center; gap: 15px; font-size: 1.1rem; color: var(--text-dark); font-weight: 500;">
+                                    <div style="display: flex; align-items: center; gap: 15px; font-size: 1.1rem; color: var(--text-dark); font-weight: 400;">
                                         <i class="fa-solid ${getAmenityIcon(am.name)}" style="color: var(--text-dark); width: 30px; font-size: 1.3rem; text-align: center;"></i>
                                         <span>${am.name}</span>
                                     </div>
                                 `;
                             });
                         } else {
-                            amenitiesContainer.innerHTML = '<p style="color: var(--text-muted);">No specific amenities listed for this place.</p>';
+                            amenitiesContainer.innerHTML = '<p style="color: var(--text-muted); font-weight: 400;">No specific amenities listed for this place.</p>';
                         }
                     }
 
-                    // 3. التحقق من ملكية المكان للتحكم بالبطاقة الجانبية
                     if (currentUserId === place.owner_id) {
-                        const addReviewBtn = document.getElementById('add-review-btn');
                         if (addReviewBtn) addReviewBtn.style.display = 'none';
                         const sidebar = document.querySelector('.booking-sidebar');
                         if (sidebar) {
                             sidebar.innerHTML = `
                                 <div class="booking-card" style="text-align: center; padding: 40px 20px;">
                                     <h3><i class="fa-solid fa-house-user" style="color: var(--accent-green);"></i> This is your property</h3>
-                                    <p style="color: var(--text-muted); margin: 15px 0;">You cannot book your own place.</p>
-                                    <a href="account.html" class="btn-book-primary" style="display: block; text-decoration: none;">Go to Dashboard</a>
+                                    <p style="color: var(--text-muted); margin: 15px 0; font-weight: 400;">You cannot book your own place.</p>
+                                    <a href="account.html" class="btn-book-primary" style="display: block; text-decoration: none; font-weight: 400;">Go to Dashboard</a>
                                 </div>
                             `;
                         }
                     }
-                    
-                    // 4. جلب بيانات المضيف
                     fetchHostDetails(place.owner_id);
                 }
             } catch (error) { console.error("Error fetching place:", error); }
@@ -264,13 +271,16 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) { console.log("Could not load host details."); }
         }
 
+        
         async function fetchPlaceReviews(id) {
             try {
                 const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}/reviews`);
+                
                 if (response.ok) {
                     const reviews = await response.json();
+                    
                     if (reviews.length === 0) {
-                        reviewsList.innerHTML = '<p style="color: var(--text-muted); padding: 20px 0;">No reviews yet. Be the first to review!</p>';
+                        reviewsList.innerHTML = '<p style="color: var(--text-muted); padding: 20px 0; font-weight: 400;">No reviews yet. Be the first to review!</p>';
                         return;
                     }
 
@@ -287,7 +297,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 reviewerName = `${userData.first_name} ${userData.last_name}`;
                                 initials = (userData.first_name[0] + userData.last_name[0]).toUpperCase();
                             }
-                        } catch (err) { console.error("Could not fetch user info for review"); }
+                        } catch (err) { console.error("Could not fetch user info"); }
+
+                        
+                        const isOwner = review.user_id === currentUserId;
+                        let actionsHtml = '';
+                        if (isOwner) {
+                            actionsHtml = `
+                                <div style="display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-soft);">
+                                    <button onclick="openEditReviewModal('${review.id}', ${review.rating}, \`${review.text.replace(/`/g, "\\`")}\`)" style="background: transparent; border: none; color: var(--text-dark); cursor: pointer; font-size: 0.95rem; font-family: var(--font-main); font-weight: 400; transition: 0.2s;" onmouseover="this.style.color='var(--accent-green)'" onmouseout="this.style.color='var(--text-dark)'"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                                    <button onclick="deleteReview('${review.id}')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.95rem; font-family: var(--font-main); font-weight: 400; transition: 0.2s;" onmouseover="this.style.color='#e63946'" onmouseout="this.style.color='var(--text-muted)'"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                                </div>
+                            `;
+                        }
 
                         const card = document.createElement('div');
                         card.className = 'review-card';
@@ -299,11 +321,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="review-header">
                                 <div class="reviewer-avatar">${initials}</div>
                                 <div class="reviewer-info">
-                                    <h4>${reviewerName}</h4>
+                                    <h4 style="font-weight: 400;">${reviewerName}</h4>
                                     <div class="rating">${fullStars}${emptyStars}</div>
                                 </div>
                             </div>
-                            <p class="review-text">"${review.text}"</p>
+                            <p class="review-text" style="font-weight: 400;">"${review.text}"</p>
+                            ${actionsHtml}
                         `;
                         reviewsList.appendChild(card);
                     }
@@ -311,6 +334,49 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) { console.error("Error fetching reviews:", error); }
         }
 
+        
+        const reviewModal = document.getElementById('edit-review-modal');
+        if (reviewModal) {
+            window.openEditReviewModal = (id, rating, text) => {
+                document.getElementById('edit-review-id').value = id;
+                document.getElementById('edit-review-rating').value = rating;
+                document.getElementById('edit-review-text').value = text;
+                reviewModal.style.display = 'flex';
+            };
+
+            document.getElementById('edit-review-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-review-id').value;
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({
+                            rating: parseInt(document.getElementById('edit-review-rating').value),
+                            text: document.getElementById('edit-review-text').value
+                        })
+                    });
+                    if (response.ok) {
+                        reviewModal.style.display = 'none';
+                        fetchPlaceReviews(placeId); 
+                    } else { alert("Failed to update review."); }
+                } catch (error) { alert("Connection error."); }
+            });
+
+            window.deleteReview = async (id) => {
+                if (!confirm("Are you sure you want to delete this review?")) return;
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) fetchPlaceReviews(placeId);
+                    else alert("Failed to delete review.");
+                } catch (error) { alert("Connection error."); }
+            };
+        }
+
+        
         const checkinInput = document.getElementById('checkin-date');
         const checkoutInput = document.getElementById('checkout-date');
         const breakdownDiv = document.getElementById('price-breakdown');
@@ -333,8 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            
             const fpCheckout = flatpickr(checkoutInput, {
                 minDate: "today",
+                disable: bookedDates, 
                 onChange: function(selectedDates) {
                     checkoutDate = selectedDates[0];
                     calculateTotal();
@@ -343,6 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             flatpickr(checkinInput, {
                 minDate: "today",
+                disable: bookedDates, 
                 onChange: function(selectedDates) {
                     checkinDate = selectedDates[0];
                     fpCheckout.set('minDate', checkinDate.fp_incr(1));
@@ -394,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 6. Add Place Form & Amenities Management ---
+    
     const addPlaceForm = document.getElementById('add-place-form');
     if (addPlaceForm) {
         if (!token) window.location.href = 'login.html';
@@ -541,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 7. Add Review Form ---
+    
     const reviewForm = document.getElementById('review-form');
     if (reviewForm) {
         if (!token) window.location.href = 'index.html';
@@ -577,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 8. Account Page & Management ---
+    
     const myPlacesList = document.getElementById('my-places-list');
     const myBookingsList = document.getElementById('my-bookings-list');
     const tabBookings = document.getElementById('tab-bookings');
@@ -685,12 +754,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // دوال التعديل والحذف للأماكن في لوحة التحكم
-        // دوال التعديل والحذف للأماكن في لوحة التحكم
+        
+        
         const modal = document.getElementById('edit-modal');
         if (modal) {
             
-            // زر إضافة المزيد من الصور داخل نافذة التعديل
+            
             const editAddImgBtn = document.getElementById('edit-add-more-imgs-btn');
             if (editAddImgBtn) {
                 editAddImgBtn.addEventListener('click', () => {
@@ -703,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // دالة فتح النافذة وتعبئتها بالبيانات من الخادم
+            
             window.openModal = async function(placeId) {
                 try {
                     const res = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}`);
@@ -714,13 +783,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('edit-title').value = place.title;
                     document.getElementById('edit-price').value = place.price;
 
-                    // معالجة الوصف والصور
+                    
                     const { desc, urls } = extractData(place.description);
                     document.getElementById('edit-description').value = desc;
 
-                    // رسم حقول الصور
+                    
                     const imgContainer = document.getElementById('edit-image-inputs-container');
-                    imgContainer.innerHTML = '<label>Place Images</label>'; // تصفير الحاوية
+                    imgContainer.innerHTML = '<label>Place Images</label>'; 
                     urls.forEach(url => {
                         const div = document.createElement('div');
                         div.className = 'input-group';
@@ -729,11 +798,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         imgContainer.appendChild(div);
                     });
 
-                    // جلب ورسم الـ Amenities وتحديد الخيارات السابقة للمكان
+                    
                     const amRes = await fetch('http://127.0.0.1:5000/api/v1/amenities/');
                     if (amRes.ok) {
                         const allAmenities = await amRes.json();
-                        // استخراج الـ IDs الخاصة بوسائل الراحة المربوطة بالمكان حالياً
+                        
                         const placeAmenityIds = (place.amenities || []).map(a => a.id);
                         
                         const amContainer = document.getElementById('edit-amenities-selection-wrapper');
@@ -751,13 +820,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('close-modal-btn').addEventListener('click', () => modal.style.display = 'none');
 
-            // حفظ التعديلات وإرسالها
+            
             document.getElementById('edit-place-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('edit-place-id').value;
                 const rawDesc = document.getElementById('edit-description').value;
                 
-                // تجميع كل الصور من الحقول
+                
                 const urlInputs = document.querySelectorAll('.edit-place-image-url');
                 const urls = Array.from(urlInputs).map(i => i.value.trim()).filter(v => v !== "");
                 
@@ -766,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     finalDesc += ` [IMG:${urls.join('|')}]`;
                 }
 
-                // تجميع وسائل الراحة المحددة
+                
                 const checkedAmenities = Array.from(document.querySelectorAll('.edit-amenity-checkbox:checked')).map(cb => cb.value);
 
                 const payload = {
@@ -785,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (response.ok) {
                         modal.style.display = 'none';
-                        fetchMyPlaces(); // تحديث الواجهة فوراً
+                        fetchMyPlaces(); 
                     } else { alert('Failed to update. Session may have expired, please log in again.'); }
                 } catch (error) { alert('Connection error.'); }
             });

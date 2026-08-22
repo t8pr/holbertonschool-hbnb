@@ -1,4 +1,4 @@
-/* استدعاء الخط بوزن 300 و 400 فقط لضمان عدم وجود أي خط عريض */
+
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400&display=swap');
 
 :root {
@@ -24,10 +24,10 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-weight: 400; /* إجبار الوزن 400 على مستوى الصفحة بالكامل */
+    font-weight: 400; 
 }
 
-/* --- Header --- */
+
 header {
     display: flex;
     justify-content: space-between;
@@ -40,7 +40,7 @@ header {
 
 .logo {
     font-size: 1.5rem;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
     text-decoration: none;
     color: var(--accent-green);
 }
@@ -48,7 +48,7 @@ header {
 .nav-links a {
     text-decoration: none;
     color: var(--text-dark);
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
     margin-left: 20px;
     transition: 0.3s;
 }
@@ -59,7 +59,7 @@ header {
     border-radius: 30px;
 }
 
-/* --- Main Layout --- */
+
 .add-review-container {
     flex: 1;
     display: flex;
@@ -78,7 +78,7 @@ header {
     box-shadow: 0 15px 35px rgba(0,0,0,0.03);
 }
 
-/* --- Card Header & Icon --- */
+
 .card-header {
     text-align: center;
     margin-bottom: 40px;
@@ -100,7 +100,7 @@ header {
 
 .card-header h1 {
     font-size: 2.2rem;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
     color: var(--text-dark);
     margin-bottom: 10px;
 }
@@ -108,10 +108,10 @@ header {
 .card-header p {
     color: var(--text-muted);
     font-size: 1.1rem;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
 }
 
-/* --- Form Fields --- */
+
 .form {
     display: flex;
     flex-direction: column;
@@ -123,7 +123,7 @@ header {
     font-size: 0.95rem;
     color: var(--text-dark);
     margin-bottom: 10px;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
 }
 
 .input-group label i {
@@ -139,7 +139,7 @@ header {
     border-radius: 12px;
     font-family: var(--font-main);
     font-size: 1rem;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
     outline: none;
     transition: all 0.3s ease;
     background-color: var(--bg-cream);
@@ -162,7 +162,7 @@ header {
     box-shadow: 0 0 0 3px rgba(58, 90, 64, 0.1);
 }
 
-/* --- Buttons & Links --- */
+
 .submit-btn {
     background-color: var(--text-dark);
     color: var(--surface-white);
@@ -170,7 +170,7 @@ header {
     padding: 16px;
     font-family: var(--font-main);
     font-size: 1.1rem;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s;
@@ -189,7 +189,7 @@ header {
     color: var(--text-muted);
     text-decoration: none;
     font-size: 0.95rem;
-    font-weight: 400; /* إجبار الوزن 400 */
+    font-weight: 400; 
     transition: color 0.3s;
 }
 
