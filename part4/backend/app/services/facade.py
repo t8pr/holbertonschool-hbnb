@@ -189,3 +189,24 @@ class HBnBFacade:
 
     def get_bookings_by_place(self, place_id):
         return self.booking_repo.model.query.filter_by(place_id=place_id).all()
+
+    def toggle_favorite(self, user_id, place_id):
+        user = self.user_repo.get(user_id)
+        place = self.place_repo.get(place_id)
+        if not user or not place:
+            return False
+            
+        if place in user.favorites:
+            user.favorites.remove(place)
+            is_favorite = False
+        else:
+            user.favorites.append(place)
+            is_favorite = True
+            
+        from app import db
+        db.session.commit()
+        return is_favorite
+
+    def get_user_favorites(self, user_id):
+        user = self.user_repo.get(user_id)
+        return user.favorites if user else []

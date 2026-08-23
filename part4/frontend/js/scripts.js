@@ -94,40 +94,91 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
+    window.toggleFavorite = async function(placeId, btnElement) {
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+        try {
+            const res = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}/favorite`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const icon = btnElement.querySelector('i');
+                if (data.isFavorite) {
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+                    btnElement.style.color = '#e63946'; 
+                } else {
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+                    btnElement.style.color = 'var(--text-muted)';
+                }
+                
+                
+                if (document.getElementById('my-favorites-list') && document.getElementById('my-favorites-list').style.display === 'grid') {
+                    if (typeof window.fetchMyFavorites === 'function') window.fetchMyFavorites();
+                }
+            }
+        } catch (e) { console.error('Error toggling favorite', e); }
+    };
+
+    
     const placesList = document.getElementById('places-list');
     const priceFilter = document.getElementById('price-filter');
     
     if (placesList) {
         let allPlaces = []; 
+        let currentUserFavIds = []; 
 
         async function fetchPlaces() {
             try {
                 const headers = {};
-                if (token) headers['Authorization'] = `Bearer ${token}`;
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                    
+                    try {
+                        const favRes = await fetch('http://127.0.0.1:5000/api/v1/users/favorites', { headers });
+                        if (favRes.ok) {
+                            const favs = await favRes.json();
+                            currentUserFavIds = favs.map(f => f.id);
+                        }
+                    } catch (e) { console.error("Could not load user favorites for index"); }
+                }
+
                 const response = await fetch('http://127.0.0.1:5000/api/v1/places/', { headers });
                 if (response.ok) {
                     allPlaces = await response.json();
-                    displayPlaces(allPlaces);
+                    displayPlaces(allPlaces, currentUserFavIds);
                 }
             } catch (error) { console.error('Error fetching places:', error); }
         }
 
-        function displayPlaces(places) {
+        function displayPlaces(places, userFavIds = []) {
             placesList.innerHTML = '';
             places.forEach((place) => {
                 const { urls } = extractData(place.description);
                 let displayImg = urls[0]; 
                 
+                const isFav = userFavIds.includes(place.id);
+                const heartIcon = isFav ? 'fa-solid' : 'fa-regular';
+                const heartColor = isFav ? '#e63946' : 'var(--text-muted)';
+                
                 const card = document.createElement('div');
                 card.className = 'place-card';
                 card.innerHTML = `
-                    <div class="card-img-wrapper">
+                    <div class="card-img-wrapper" style="position: relative;">
                         <img src="${displayImg}" alt="${place.title.replace(/'/g, "\\'")}">
-                        <div class="card-price-badge">$${place.price} <span>/ night</span></div>
+                        <div class="card-price-badge" style="font-weight: 400;">$${place.price} <span style="font-weight: 400;">/ night</span></div>
+                        <button class="btn-favorite" style="color: ${heartColor};" onclick="toggleFavorite('${place.id}', this)">
+                            <i class="${heartIcon} fa-heart"></i>
+                        </button>
                     </div>
                     <div class="card-info">
-                        <h3>${place.title}</h3>
-                        <a href="place.html?id=${place.id}" class="btn-view">Explore <i class="fa-solid fa-arrow-right"></i></a>
+                        <h3 style="font-weight: 400;">${place.title}</h3>
+                        <a href="place.html?id=${place.id}" class="btn-view" style="font-weight: 400;">Explore <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                 `;
                 placesList.appendChild(card);
@@ -137,14 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (priceFilter) {
             priceFilter.addEventListener('change', (event) => {
                 const maxPrice = event.target.value;
-                if (maxPrice === 'All') displayPlaces(allPlaces);
-                else displayPlaces(allPlaces.filter(place => place.price <= parseInt(maxPrice)));
+                if (maxPrice === 'All') displayPlaces(allPlaces, currentUserFavIds);
+                else displayPlaces(allPlaces.filter(place => place.price <= parseInt(maxPrice)), currentUserFavIds);
             });
         }
         fetchPlaces();
     }
 
-    
     
     const placeDetailsContainer = document.getElementById('place-details');
     
@@ -174,19 +224,29 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('lightbox-modal').style.display = 'block';
         };
 
-        
         async function fetchPlaceBookedDates(id) {
             try {
                 const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}/bookings`);
-                if (response.ok) {
-                    bookedDates = await response.json(); 
-                }
+                if (response.ok) bookedDates = await response.json(); 
             } catch (error) { console.error("Could not fetch booked dates."); }
         }
 
         async function fetchPlaceDetails(id) {
-            
             try {
+                
+                let isFav = false;
+                if (token) {
+                    try {
+                        const favRes = await fetch('http://127.0.0.1:5000/api/v1/users/favorites', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (favRes.ok) {
+                            const favs = await favRes.json();
+                            isFav = favs.some(f => f.id === id); 
+                        }
+                    } catch (e) { console.error("Could not load favorites"); }
+                }
+
                 const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}`);
                 if (response.ok) {
                     const place = await response.json();
@@ -195,9 +255,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('place-title').innerText = place.title;
                     document.getElementById('booking-price-display').innerText = `$${place.price}`;
                     
+                    
+                    const favBtn = document.getElementById('place-page-fav-btn');
+                    if (favBtn) {
+                        favBtn.style.display = 'flex';
+                        const heartIcon = isFav ? 'fa-solid' : 'fa-regular';
+                        const heartColor = isFav ? '#e63946' : 'var(--text-muted)';
+                        favBtn.style.color = heartColor;
+                        favBtn.innerHTML = `<i class="${heartIcon} fa-heart"></i>`;
+                        
+                        
+                        favBtn.onclick = () => toggleFavorite(place.id, favBtn);
+                    }
+
+                    
                     const { desc, urls } = extractData(place.description);
                     document.getElementById('place-description').innerText = desc;
 
+                    
                     const galleryContainer = document.getElementById('photo-gallery');
                     galleryContainer.innerHTML = '';
                     
@@ -218,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                     }
                     if (urls.length > 3) {
-                        galleryContainer.innerHTML += `<button class="show-all-btn" onclick="openLightbox()"><i class="fa-solid fa-images"></i> Show all ${urls.length} photos</button>`;
+                        galleryContainer.innerHTML += `<button class="show-all-btn" onclick="openLightbox()" style="font-weight: 400;"><i class="fa-solid fa-images"></i> Show all ${urls.length} photos</button>`;
                     }
 
                     const lightboxContent = document.getElementById('lightbox-content');
@@ -226,6 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         lightboxContent.innerHTML = urls.map(u => `<img src="${u}">`).join('');
                     }
 
+                    
                     const amenitiesContainer = document.getElementById('place-amenities');
                     if (amenitiesContainer) {
                         amenitiesContainer.innerHTML = ''; 
@@ -243,15 +319,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
+                    
                     if (currentUserId === place.owner_id) {
                         if (addReviewBtn) addReviewBtn.style.display = 'none';
                         const sidebar = document.querySelector('.booking-sidebar');
                         if (sidebar) {
                             sidebar.innerHTML = `
                                 <div class="booking-card" style="text-align: center; padding: 40px 20px;">
-                                    <h3><i class="fa-solid fa-house-user" style="color: var(--accent-green);"></i> This is your property</h3>
+                                    <h3 style="font-weight: 400;"><i class="fa-solid fa-house-user" style="color: var(--accent-green); margin-right: 8px;"></i> This is your property</h3>
                                     <p style="color: var(--text-muted); margin: 15px 0; font-weight: 400;">You cannot book your own place.</p>
-                                    <a href="account.html" class="btn-book-primary" style="display: block; text-decoration: none; font-weight: 400;">Go to Dashboard</a>
+                                    <a href="account.html" class="btn-primary" style="display: block; text-decoration: none; font-weight: 400;">Go to Dashboard</a>
                                 </div>
                             `;
                         }
@@ -271,25 +348,20 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) { console.log("Could not load host details."); }
         }
 
-        
         async function fetchPlaceReviews(id) {
             try {
                 const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}/reviews`);
-                
                 if (response.ok) {
                     const reviews = await response.json();
-                    
                     if (reviews.length === 0) {
                         reviewsList.innerHTML = '<p style="color: var(--text-muted); padding: 20px 0; font-weight: 400;">No reviews yet. Be the first to review!</p>';
                         return;
                     }
-
                     reviewsList.innerHTML = ''; 
                     
                     for (const review of reviews) {
                         let reviewerName = "HBnB Guest";
                         let initials = "HG";
-
                         try {
                             const userRes = await fetch(`http://127.0.0.1:5000/api/v1/users/${review.user_id}`);
                             if (userRes.ok) {
@@ -299,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         } catch (err) { console.error("Could not fetch user info"); }
 
-                        
                         const isOwner = review.user_id === currentUserId;
                         let actionsHtml = '';
                         if (isOwner) {
@@ -313,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         const card = document.createElement('div');
                         card.className = 'review-card';
-                        
                         const fullStars = '<i class="fa-solid fa-star"></i>'.repeat(review.rating);
                         const emptyStars = '<i class="fa-regular fa-star"></i>'.repeat(5 - review.rating);
                         
@@ -334,7 +404,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) { console.error("Error fetching reviews:", error); }
         }
 
-        
         const reviewModal = document.getElementById('edit-review-modal');
         if (reviewModal) {
             window.openEditReviewModal = (id, rating, text) => {
@@ -376,7 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        
         const checkinInput = document.getElementById('checkin-date');
         const checkoutInput = document.getElementById('checkout-date');
         const breakdownDiv = document.getElementById('price-breakdown');
@@ -389,7 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (checkinDate && checkoutDate && currentPlacePrice > 0) {
                     const diffTime = Math.abs(checkoutDate - checkinDate);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                    
                     if (diffDays > 0) {
                         document.getElementById('calc-nights').innerText = `$${currentPlacePrice} x ${diffDays} nights`;
                         document.getElementById('calc-total').innerText = `$${currentPlacePrice * diffDays}`;
@@ -399,7 +466,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            
             const fpCheckout = flatpickr(checkoutInput, {
                 minDate: "today",
                 disable: bookedDates, 
@@ -423,18 +489,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bookingForm) {
                 bookingForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    
                     if (!token) {
                         alert("Please login to make a reservation.");
                         window.location.href = 'login.html';
                         return;
                     }
-
                     if (!checkinDate || !checkoutDate) {
                         alert("Please select check-in and check-out dates.");
                         return;
                     }
-
                     const diffDays = Math.ceil(Math.abs(checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
                     const payload = {
                         place_id: placeId,
@@ -449,7 +512,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                             body: JSON.stringify(payload)
                         });
-                        
                         if (response.ok) {
                             alert('Booking confirmed successfully!');
                             window.location.href = 'account.html';
@@ -493,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         amenitiesSelectionWrapper.innerHTML = amenities.map(am => `
                             <label>
                                 <input type="checkbox" class="amenity-checkbox" value="${am.id}">
-                                <span class="amenity-pill"><i class="fa-solid ${getAmenityIcon(am.name)}" style="margin-right: 5px;"></i> ${am.name}</span>
+                                <span class="amenity-pill"><i class="fa-solid ${getAmenityIcon(am.name)}" style="margin-right: 5px;"></i> <span style="font-weight: 400;">${am.name}</span></span>
                             </label>
                         `).join('');
                     }
@@ -502,8 +564,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         amenitiesListManage.innerHTML = amenities.map(am => `
                             <div class="amenity-list-item">
                                 <div>
-                                    <h4><i class="fa-solid ${getAmenityIcon(am.name)}" style="color: var(--accent-green); margin-right: 5px;"></i> ${am.name}</h4>
-                                    <p>${am.description || "No description"}</p>
+                                    <h4 style="font-weight: 400;"><i class="fa-solid ${getAmenityIcon(am.name)}" style="color: var(--accent-green); margin-right: 5px;"></i> ${am.name}</h4>
+                                    <p style="font-weight: 400;">${am.description || "No description"}</p>
                                 </div>
                                 <div style="flex: 0; display: flex; gap: 10px;">
                                     <button class="btn-icon edit" onclick="editAmenity('${am.id}', '${am.name.replace(/'/g, "\\'")}', '${(am.description||"").replace(/'/g, "\\'")}')"><i class="fa-solid fa-pen"></i></button>
@@ -647,15 +709,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
-    const myPlacesList = document.getElementById('my-places-list');
-    const myBookingsList = document.getElementById('my-bookings-list');
-    const tabBookings = document.getElementById('tab-bookings');
-    const tabPlaces = document.getElementById('tab-places');
-    const bookingsTitle = document.getElementById('bookings-title');
-    const placesTitle = document.querySelector('.main-content .section-title');
-
-    if (myPlacesList || myBookingsList) {
+    const accountDashboardWrapper = document.querySelector('.dashboard-wrapper');
+    if (accountDashboardWrapper) {
         if (!token) window.location.href = 'login.html';
+
+        const myPlacesList = document.getElementById('my-places-list');
+        const myBookingsList = document.getElementById('my-bookings-list');
+        const myFavoritesList = document.getElementById('my-favorites-list');
+        const tabPlaces = document.getElementById('tab-places');
+        const tabBookings = document.getElementById('tab-bookings');
+        const tabFavorites = document.getElementById('tab-favorites');
 
         document.getElementById('logout-btn').addEventListener('click', (e) => {
             e.preventDefault();
@@ -663,6 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         });
 
+        
         async function fetchMyPlaces() {
             try {
                 const response = await fetch('http://127.0.0.1:5000/api/v1/places/', {
@@ -677,9 +741,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function renderMyPlaces(places) {
+            if(!myPlacesList) return;
             myPlacesList.innerHTML = '';
             if (places.length === 0) {
-                myPlacesList.innerHTML = '<p>You have not hosted any places yet.</p>';
+                myPlacesList.innerHTML = '<p style="font-weight: 400;">You have not hosted any places yet.</p>';
                 return;
             }
 
@@ -692,11 +757,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.innerHTML = `
                     <img src="${displayImg}" alt="${place.title.replace(/'/g, "\\'")}" class="card-img">
                     <div class="card-body">
-                        <h3>${place.title}</h3>
-                        <p>$${place.price} / night</p>
+                        <h3 style="font-weight: 400;">${place.title}</h3>
+                        <p style="font-weight: 400;">$${place.price} / night</p>
                         <div class="card-actions">
-                            <button class="btn-edit" onclick="openModal('${place.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button class="btn-delete" onclick="deletePlace('${place.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                            <button class="btn-edit" style="font-weight: 400;" onclick="openModal('${place.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button class="btn-delete" style="font-weight: 400;" onclick="deletePlace('${place.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 `;
@@ -705,13 +770,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         async function fetchMyBookings() {
+            if(!myBookingsList) return;
             try {
                 const response = await fetch('http://127.0.0.1:5000/api/v1/bookings/', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
                     const bookings = await response.json();
-                    myBookingsList.innerHTML = bookings.length ? '' : '<p>No booking history found.</p>';
+                    myBookingsList.innerHTML = bookings.length ? '' : '<p style="font-weight: 400;">No booking history found.</p>';
 
                     for (const booking of bookings) {
                         const placeRes = await fetch(`http://127.0.0.1:5000/api/v1/places/${booking.place_id}`);
@@ -719,11 +785,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         myBookingsList.innerHTML += `
                             <div class="place-card" style="padding: 20px;">
-                                <h3><i class="fa-solid fa-location-dot" style="color: var(--accent-green); margin-right: 5px;"></i> ${placeData.title}</h3>
-                                <p style="color: var(--text-muted); margin: 10px 0;">
+                                <h3 style="font-weight: 400;"><i class="fa-solid fa-location-dot" style="color: var(--accent-green); margin-right: 5px;"></i> ${placeData.title}</h3>
+                                <p style="color: var(--text-muted); margin: 10px 0; font-weight: 400;">
                                     <i class="fa-solid fa-calendar-days" style="margin-right: 5px;"></i> ${booking.start_date} to ${booking.end_date}
                                 </p>
-                                <strong style="color: var(--accent-green); font-size: 1.2rem;">Total: $${booking.total_price}</strong>
+                                <strong style="color: var(--accent-green); font-size: 1.2rem; font-weight: 400;">Total: $${booking.total_price}</strong>
                             </div>
                         `;
                     }
@@ -731,35 +797,97 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) { console.error('Error fetching bookings', err); }
         }
 
-        if (tabBookings && tabPlaces) {
-            tabBookings.addEventListener('click', (e) => {
-                e.preventDefault();
-                tabBookings.classList.add('active');
-                tabPlaces.classList.remove('active');
-                myPlacesList.style.display = 'none';
-                if (placesTitle) placesTitle.style.display = 'none';
-                myBookingsList.style.display = 'grid';
-                if (bookingsTitle) bookingsTitle.style.display = 'block';
-                fetchMyBookings();
-            });
+        window.fetchMyFavorites = async function() {
+            if(!myFavoritesList) return;
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/v1/users/favorites', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const favorites = await response.json();
+                    myFavoritesList.innerHTML = '';
+                    if (favorites.length === 0) {
+                        myFavoritesList.innerHTML = '<p style="font-weight: 400;">You have no favorite places yet.</p>';
+                        return;
+                    }
+                    
+                    favorites.forEach((place) => {
+                        const { urls } = extractData(place.description);
+                        let displayImg = urls[0];
+                        const card = document.createElement('div');
+                        card.className = 'place-card';
+                        card.innerHTML = `
+                            <div class="card-img-wrapper" style="position: relative;">
+                                <img src="${displayImg}" alt="${place.title.replace(/'/g, "\\'")}">
+                                <button class="btn-favorite" style="color: #e63946;" onclick="toggleFavorite('${place.id}', this)">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 style="font-weight: 400;">${place.title}</h3>
+                                <a href="place.html?id=${place.id}" class="btn-view" style="font-weight: 400;">Explore <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        `;
+                        myFavoritesList.appendChild(card);
+                    });
+                }
+            } catch (error) { console.error('Error fetching favorites:', error); }
+        }
 
+        
+        function switchTab(activeTabId, showSectionId, titleId) {
+            ['tab-places', 'tab-bookings', 'tab-favorites'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            const activeTab = document.getElementById(activeTabId);
+            if(activeTab) activeTab.classList.add('active');
+
+            ['my-places-list', 'my-bookings-list', 'my-favorites-list'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            const showSection = document.getElementById(showSectionId);
+            if(showSection) showSection.style.display = 'grid';
+
+            const pTitle = document.querySelector('.main-content .section-title:not(#bookings-title):not(#favorites-title)');
+            const bTitle = document.getElementById('bookings-title');
+            const fTitle = document.getElementById('favorites-title');
+            
+            if (pTitle) pTitle.style.display = 'none';
+            if (bTitle) bTitle.style.display = 'none';
+            if (fTitle) fTitle.style.display = 'none';
+            
+            if (titleId === 'places-title' && pTitle) pTitle.style.display = 'block';
+            else if (document.getElementById(titleId)) document.getElementById(titleId).style.display = 'block';
+        }
+
+        if (tabPlaces) {
             tabPlaces.addEventListener('click', (e) => {
                 e.preventDefault();
-                tabPlaces.classList.add('active');
-                tabBookings.classList.remove('active');
-                myBookingsList.style.display = 'none';
-                if (bookingsTitle) bookingsTitle.style.display = 'none';
-                myPlacesList.style.display = 'grid';
-                if (placesTitle) placesTitle.style.display = 'block';
+                switchTab('tab-places', 'my-places-list', 'places-title');
+                
+                fetchMyPlaces();
+            });
+        }
+        if (tabBookings) {
+            tabBookings.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('tab-bookings', 'my-bookings-list', 'bookings-title');
+                fetchMyBookings();
+            });
+        }
+        if (tabFavorites) {
+            tabFavorites.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('tab-favorites', 'my-favorites-list', 'favorites-title');
+                fetchMyFavorites();
             });
         }
 
         
-        
         const modal = document.getElementById('edit-modal');
         if (modal) {
-            
-            
             const editAddImgBtn = document.getElementById('edit-add-more-imgs-btn');
             if (editAddImgBtn) {
                 editAddImgBtn.addEventListener('click', () => {
@@ -772,7 +900,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            
             window.openModal = async function(placeId) {
                 try {
                     const res = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}`);
@@ -783,13 +910,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('edit-title').value = place.title;
                     document.getElementById('edit-price').value = place.price;
 
-                    
                     const { desc, urls } = extractData(place.description);
                     document.getElementById('edit-description').value = desc;
 
-                    
                     const imgContainer = document.getElementById('edit-image-inputs-container');
-                    imgContainer.innerHTML = '<label>Place Images</label>'; 
+                    imgContainer.innerHTML = '<label style="font-weight: 400;">Place Images</label>'; 
                     urls.forEach(url => {
                         const div = document.createElement('div');
                         div.className = 'input-group';
@@ -798,44 +923,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         imgContainer.appendChild(div);
                     });
 
-                    
                     const amRes = await fetch('http://127.0.0.1:5000/api/v1/amenities/');
                     if (amRes.ok) {
                         const allAmenities = await amRes.json();
-                        
                         const placeAmenityIds = (place.amenities || []).map(a => a.id);
                         
                         const amContainer = document.getElementById('edit-amenities-selection-wrapper');
                         amContainer.innerHTML = allAmenities.map(am => `
                             <label>
                                 <input type="checkbox" class="edit-amenity-checkbox" value="${am.id}" ${placeAmenityIds.includes(am.id) ? 'checked' : ''}>
-                                <span class="amenity-pill"><i class="fa-solid ${getAmenityIcon(am.name)}" style="margin-right: 5px;"></i> ${am.name}</span>
+                                <span class="amenity-pill" style="font-weight: 400;"><i class="fa-solid ${getAmenityIcon(am.name)}" style="margin-right: 5px;"></i> ${am.name}</span>
                             </label>
                         `).join('');
                     }
-
                     modal.style.display = 'flex';
                 } catch (e) { alert("Could not load place details for editing."); }
             };
 
             document.getElementById('close-modal-btn').addEventListener('click', () => modal.style.display = 'none');
 
-            
             document.getElementById('edit-place-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('edit-place-id').value;
                 const rawDesc = document.getElementById('edit-description').value;
                 
-                
                 const urlInputs = document.querySelectorAll('.edit-place-image-url');
                 const urls = Array.from(urlInputs).map(i => i.value.trim()).filter(v => v !== "");
                 
                 let finalDesc = rawDesc;
-                if (urls.length > 0) {
-                    finalDesc += ` [IMG:${urls.join('|')}]`;
-                }
+                if (urls.length > 0) finalDesc += ` [IMG:${urls.join('|')}]`;
 
-                
                 const checkedAmenities = Array.from(document.querySelectorAll('.edit-amenity-checkbox:checked')).map(cb => cb.value);
 
                 const payload = {
@@ -889,6 +1006,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        
         fetchMyPlaces();
     }
 });

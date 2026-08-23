@@ -2,18 +2,24 @@ import re
 from app import bcrypt, db
 from app.models.basemodel import BaseModel
 
+user_favorites = db.Table('user_favorites',
+    db.Column('user_id', db.String(36), db.ForeignKey('users.id', ondelete="CASCADE"), primary_key=True),
+    db.Column('place_id', db.String(36), db.ForeignKey('places.id', ondelete="CASCADE"), primary_key=True)
+)
+
 class User(BaseModel):
     __tablename__ = 'users'
-
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-
+    
     places = db.relationship('Place', backref='user', lazy=True, cascade="all, delete-orphan")
     reviews = db.relationship('Review', backref='user', lazy=True, cascade="all, delete-orphan")
     bookings = db.relationship('Booking', backref='user', lazy=True, cascade="all, delete-orphan")
+    
+    favorites = db.relationship('Place', secondary=user_favorites, backref=db.backref('favorited_by', lazy=True))
     def __init__(self, first_name, last_name, email, password, is_admin=False, **kwargs):
         super().__init__(**kwargs)
         self.validate_user_data(first_name, last_name, email)

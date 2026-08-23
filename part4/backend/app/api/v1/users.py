@@ -119,3 +119,13 @@ class UserResource(Resource):
         
         facade.delete_user(user_id)
         return {"message": "User deleted successfully"}, 200
+
+    @api.route('/favorites')
+    class UserFavorites(Resource):
+        @api.response(200, "Favorites retrieved")
+        @jwt_required()
+        def get(self):
+            """Get user favorite places"""
+            current_user = get_jwt_identity()
+            favorites = facade.get_user_favorites(current_user)
+            return [place.to_dict() for place in favorites], 200

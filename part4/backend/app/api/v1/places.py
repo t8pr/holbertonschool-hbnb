@@ -164,3 +164,14 @@ class PlaceResource(Resource):
                 for b in bookings
             ]
             return booked_dates, 200
+
+    @api.route('/<string:place_id>/favorite')
+    @api.param("place_id", "The unique identifier of the place")
+    class PlaceFavorite(Resource):
+        @api.response(200, "Favorite toggled successfully")
+        @jwt_required()
+        def post(self, place_id):
+            """Toggle favorite status for a place"""
+            current_user = get_jwt_identity()
+            is_favorite = facade.toggle_favorite(current_user, place_id)
+            return {"message": "Success", "isFavorite": is_favorite}, 200

@@ -351,3 +351,78 @@
         font-size: 2.2rem;
     }
 }
+
+
+.fav-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+.fav-btn:hover {
+  background-color: rgba(255, 65, 105, 0.1); 
+}
+
+
+.heart-icon {
+  width: 24px;
+  height: 24px;
+  fill: transparent;
+  stroke: #888888; 
+  stroke-width: 2px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+
+.fav-btn:hover .heart-icon {
+  stroke: #ff4169;
+}
+
+
+.fav-btn.active .heart-icon {
+  fill: #ff4169; 
+  stroke: #ff4169;
+  animation: pop 0.4s ease-out forwards;
+}
+
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+@media (max-width: 992px) {
+    .place-layout { flex-direction: column; gap: 30px; margin-top: 40px; }
+    .booking-sidebar { width: 100%; position: static; }
+}
+@media (max-width: 768px) {
+    header { flex-direction: column; gap: 15px; padding: 15px 5%; position: static; }
+    .photo-gallery { grid-template-columns: 1fr; grid-template-rows: 300px; }
+    .main-photo { grid-row: span 1; }
+    .side-photo { display: none; }
+    .place-info h1 { font-size: 2rem; }
+    .host-info { flex-direction: column; align-items: flex-start; }
+    #place-amenities { grid-template-columns: 1fr !important; }
+    .date-picker-group { flex-direction: column; border-radius: 12px; }
+    .date-picker-group .input-group:first-child { border-right: none; border-bottom: 1px solid var(--text-muted); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .lightbox-content { padding: 20px 0; }
+    .close-lightbox { top: 10px; right: 20px; }
+}

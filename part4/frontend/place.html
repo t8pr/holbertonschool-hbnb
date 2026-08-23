@@ -31,7 +31,12 @@
             </div>
             
             <div class="place-info" id="place-info">
-                <h1 id="place-title">Loading...</h1>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h1 id="place-title" style="font-weight: 400; margin-bottom: 0;">Loading...</h1>
+                    <button id="place-page-fav-btn" class="btn-favorite" style="position: static; display: none; border: 1px solid var(--border-soft); box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                </div>
                 <div class="host-info">
                     <span id="place-host">Hosted by ...</span>
                 </div>

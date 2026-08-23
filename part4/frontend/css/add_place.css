@@ -52,3 +52,16 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .btn-icon { background: transparent; border: none; cursor: pointer; padding: 8px; font-size: 1.1rem; transition: 0.2s; }
 .btn-icon.edit { color: var(--accent-green); }
 .btn-icon.delete { color: #e63946; }
+
+
+@media (max-width: 768px) {
+    header { flex-direction: column; gap: 15px; }
+    .add-place-container { padding: 30px 5%; }
+    .place-form-card { padding: 30px 20px; }
+    .place-form-card h1 { font-size: 1.8rem; text-align: center; }
+    .form-grid { grid-template-columns: 1fr; gap: 15px; }
+    .full-width { grid-column: span 1; }
+    .modal-content { width: 95%; padding: 20px; }
+    .amenity-list-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .amenity-list-item div:last-child { width: 100%; justify-content: flex-end; }
+}

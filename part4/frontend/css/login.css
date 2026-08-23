@@ -152,3 +152,12 @@ form { display: flex; flex-direction: column; gap: 22px; }
     text-decoration: underline; 
     color: var(--accent-green-hover); 
 }
+
+
+@media (max-width: 768px) {
+    header { flex-direction: column; gap: 15px; height: auto; padding: 15px 5%; }
+    .login-container { height: auto; min-height: 100vh; padding: 20px 0; }
+    .login-form-wrapper { padding: 20px; align-items: flex-start; }
+    .form-content h1 { font-size: 2rem; }
+    .name-group { flex-direction: column; gap: 22px; }
+}
