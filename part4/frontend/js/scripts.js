@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/auth/login', {
+                const response = await fetch('https://hbnb.onrender.com/api/v1/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            const res = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}/favorite`, {
+            const res = await fetch(`https://hbnb.onrender.com/api/v1/places/${placeId}/favorite`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers['Authorization'] = `Bearer ${token}`;
                     
                     try {
-                        const favRes = await fetch('http://127.0.0.1:5000/api/v1/users/favorites', { headers });
+                        const favRes = await fetch('https://hbnb.onrender.com/api/v1/users/favorites', { headers });
                         if (favRes.ok) {
                             const favs = await favRes.json();
                             currentUserFavIds = favs.map(f => f.id);
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } catch (e) { console.error("Could not load user favorites for index"); }
                 }
 
-                const response = await fetch('http://127.0.0.1:5000/api/v1/places/', { headers });
+                const response = await fetch('https://hbnb.onrender.com/api/v1/places/', { headers });
                 if (response.ok) {
                     allPlaces = await response.json();
                     displayPlaces(allPlaces, currentUserFavIds);
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async function fetchPlaceBookedDates(id) {
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}/bookings`);
+                const response = await fetch(`https://hbnb.onrender.com/api/v1/places/${id}/bookings`);
                 if (response.ok) bookedDates = await response.json(); 
             } catch (error) { console.error("Could not fetch booked dates."); }
         }
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let isFav = false;
                 if (token) {
                     try {
-                        const favRes = await fetch('http://127.0.0.1:5000/api/v1/users/favorites', {
+                        const favRes = await fetch('https://hbnb.onrender.com/api/v1/users/favorites', {
                             headers: { 'Authorization': `Bearer ${token}` }
                         });
                         if (favRes.ok) {
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } catch (e) { console.error("Could not load favorites"); }
                 }
 
-                const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}`);
+                const response = await fetch(`https://hbnb.onrender.com/api/v1/places/${id}`);
                 if (response.ok) {
                     const place = await response.json();
                     currentPlacePrice = place.price; 
@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async function fetchHostDetails(ownerId) {
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/v1/users/${ownerId}`);
+                const response = await fetch(`https://hbnb.onrender.com/api/v1/users/${ownerId}`);
                 if (response.ok) {
                     const user = await response.json();
                     document.getElementById('place-host').innerText = `Host: ${user.first_name} ${user.last_name}`;
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async function fetchPlaceReviews(id) {
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}/reviews`);
+                const response = await fetch(`https://hbnb.onrender.com/api/v1/reviews/${id}/reviews`);
                 if (response.ok) {
                     const reviews = await response.json();
                     if (reviews.length === 0) {
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let reviewerName = "HBnB Guest";
                         let initials = "HG";
                         try {
-                            const userRes = await fetch(`http://127.0.0.1:5000/api/v1/users/${review.user_id}`);
+                            const userRes = await fetch(`https://hbnb.onrender.com/api/v1/users/${review.user_id}`);
                             if (userRes.ok) {
                                 const userData = await userRes.json();
                                 reviewerName = `${userData.first_name} ${userData.last_name}`;
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const id = document.getElementById('edit-review-id').value;
                 try {
-                    const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}`, {
+                    const response = await fetch(`https://hbnb.onrender.com/api/v1/reviews/${id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({
@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.deleteReview = async (id) => {
                 if (!confirm("Are you sure you want to delete this review?")) return;
                 try {
-                    const response = await fetch(`http://127.0.0.1:5000/api/v1/reviews/${id}`, {
+                    const response = await fetch(`https://hbnb.onrender.com/api/v1/reviews/${id}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
 
                     try {
-                        const response = await fetch('http://127.0.0.1:5000/api/v1/bookings/', {
+                        const response = await fetch('https://hbnb.onrender.com/api/v1/bookings/', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                             body: JSON.stringify(payload)
@@ -547,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         async function fetchAndRenderAmenities() {
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/amenities/');
+                const response = await fetch('https://hbnb.onrender.com/api/v1/amenities/');
                 if (response.ok) {
                     const amenities = await response.json();
                     
@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.deleteAmenity = async (id) => {
             if (!confirm("Delete this amenity globally?")) return;
             try {
-                const res = await fetch(`http://127.0.0.1:5000/api/v1/amenities/${id}`, {
+                const res = await fetch(`https://hbnb.onrender.com/api/v1/amenities/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             const method = id ? 'PUT' : 'POST';
-            const url = id ? `http://127.0.0.1:5000/api/v1/amenities/${id}` : `http://127.0.0.1:5000/api/v1/amenities/`;
+            const url = id ? `https://hbnb.onrender.com/api/v1/amenities/${id}` : `https://hbnb.onrender.com/api/v1/amenities/`;
 
             try {
                 const res = await fetch(url, {
@@ -649,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkedAmenities = Array.from(document.querySelectorAll('.amenity-checkbox:checked')).map(cb => cb.value);
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/places/', {
+                const response = await fetch('https://hbnb.onrender.com/api/v1/places/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = document.getElementById('review-text').value;
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/reviews/', {
+                const response = await fetch('https://hbnb.onrender.com/api/v1/reviews/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({
@@ -729,7 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         async function fetchMyPlaces() {
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/places/', {
+                const response = await fetch('https://hbnb.onrender.com/api/v1/places/', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
         async function fetchMyBookings() {
             if(!myBookingsList) return;
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/bookings/', {
+                const response = await fetch('https://hbnb.onrender.com/api/v1/bookings/', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -780,7 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     myBookingsList.innerHTML = bookings.length ? '' : '<p style="font-weight: 400;">No booking history found.</p>';
 
                     for (const booking of bookings) {
-                        const placeRes = await fetch(`http://127.0.0.1:5000/api/v1/places/${booking.place_id}`);
+                        const placeRes = await fetch(`https://hbnb.onrender.com/api/v1/places/${booking.place_id}`);
                         const placeData = placeRes.ok ? await placeRes.json() : { title: "Unknown Place" };
 
                         myBookingsList.innerHTML += `
@@ -800,7 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.fetchMyFavorites = async function() {
             if(!myFavoritesList) return;
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/v1/users/favorites', {
+                const response = await fetch('https://hbnb.onrender.com/api/v1/users/favorites', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -902,7 +902,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             window.openModal = async function(placeId) {
                 try {
-                    const res = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}`);
+                    const res = await fetch(`https://hbnb.onrender.com/api/v1/places/${placeId}`);
                     if (!res.ok) throw new Error("Place not found");
                     const place = await res.json();
 
@@ -923,7 +923,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         imgContainer.appendChild(div);
                     });
 
-                    const amRes = await fetch('http://127.0.0.1:5000/api/v1/amenities/');
+                    const amRes = await fetch('https://hbnb.onrender.com/api/v1/amenities/');
                     if (amRes.ok) {
                         const allAmenities = await amRes.json();
                         const placeAmenityIds = (place.amenities || []).map(a => a.id);
@@ -963,7 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${id}`, {
+                    const response = await fetch(`https://hbnb.onrender.com/api/v1/places/${id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify(payload)
@@ -980,7 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.deletePlace = async function(placeId) {
             if (!confirm("Are you sure you want to delete this place?")) return;
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}`, {
+                const response = await fetch(`https://hbnb.onrender.com/api/v1/places/${placeId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -994,7 +994,7 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteAccountBtn.addEventListener('click', async () => {
                 if (!confirm("WARNING: This will permanently delete your account. Proceed?")) return;
                 try {
-                    const response = await fetch(`http://127.0.0.1:5000/api/v1/users/${currentUserId}`, {
+                    const response = await fetch(`https://hbnb.onrender.com/api/v1/users/${currentUserId}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
