@@ -8,3 +8,4 @@ flask-bcrypt
 flask-jwt-extended
 sqlalchemy
 flask-sqlalchemy
+flask-cors
