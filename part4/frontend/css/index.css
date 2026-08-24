@@ -261,3 +261,7 @@ main { padding: 120px 5% 80px 5%; }
     .btn-book-primary { width: 100%; }
     .places-grid { grid-template-columns: 1fr; gap: 25px; }
 }
+
+div[id*="netlify"], a[href*="netlify.com"] {
+    display: none !important;
+}
