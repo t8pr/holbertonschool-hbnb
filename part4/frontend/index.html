@@ -59,12 +59,15 @@
 
     <script src="js/scripts.js"></script>
     <script>
-        setTimeout(() => {
-            const netlifyBadge = document.getElementById('nl-badge');
-            if (netlifyBadge) {
-                netlifyBadge.remove();
-            }
-        }, 500);
-    </script>
+    const observer = new MutationObserver((mutations) => {
+        const netlifyBadge = document.getElementById('nl-badge');
+        if (netlifyBadge) {
+            netlifyBadge.remove();
+            observer.disconnect();
+        }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+</script>
 </body>
 </html>
