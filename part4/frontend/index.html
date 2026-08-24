@@ -58,5 +58,13 @@
     </main>
 
     <script src="js/scripts.js"></script>
+    <script>
+        setTimeout(() => {
+            const netlifyBadge = document.getElementById('nl-badge');
+            if (netlifyBadge) {
+                netlifyBadge.remove();
+            }
+        }, 500);
+    </script>
 </body>
 </html>
