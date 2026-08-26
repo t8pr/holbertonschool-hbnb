@@ -262,7 +262,6 @@ main { padding: 120px 5% 80px 5%; }
     .places-grid { grid-template-columns: 1fr; gap: 25px; }
 }
 
-/* تنسيقات قسم التقييمات المميزة */
 .reviews-showcase {
     display: flex;
     justify-content: center;
@@ -321,12 +320,11 @@ main { padding: 120px 5% 80px 5%; }
     gap: 12px;
 }
 
-/* تنسيقات الفوتر الاحترافي */
 .site-footer {
     background-color: var(--surface-white, #ffffff);
     border-top: 1px solid var(--border-soft, #e7e2d8);
     padding: 25px 5%;
-    margin-top: auto; /* هذا السطر السحري يدفع الفوتر لأسفل الصفحة دائماً */
+    margin-top: auto;
     width: 100%;
 }
 
@@ -357,7 +355,6 @@ main { padding: 120px 5% 80px 5%; }
     transform: translateY(-3px);
 }
 
-/* استجابة الفوتر للشاشات الصغيرة */
 @media (max-width: 768px) {
     .footer-content {
         flex-direction: column;
