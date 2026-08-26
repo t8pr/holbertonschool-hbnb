@@ -1007,4 +1007,65 @@ document.addEventListener('DOMContentLoaded', () => {
         
         fetchMyPlaces();
     }
+    // --- دالة جلب وعرض التقييمات المميزة في الصفحة الرئيسية ---
+    const featuredReviewsContainer = document.getElementById('featured-reviews');
+    
+    if (featuredReviewsContainer) {
+        async function loadFeaturedReviews() {
+            try {
+                // 1. جلب جميع التقييمات
+                const res = await fetch('https://hbnb.onrender.com/api/v1/reviews/');
+                if (!res.ok) throw new Error("Failed to fetch reviews");
+                const allReviews = await res.json();
+                
+                // 2. تصفية التقييمات ذات الـ 5 نجوم فقط
+                const topReviews = allReviews.filter(r => r.rating === 5);
+                
+                if (topReviews.length === 0) {
+                    featuredReviewsContainer.innerHTML = '<p style="text-align: center; width: 100%; color: var(--text-muted);">More reviews coming soon!</p>';
+                    return;
+                }
+                
+                // 3. خلط التقييمات واختيار 3 عشوائية كحد أقصى
+                const shuffled = topReviews.sort(() => 0.5 - Math.random());
+                const selectedReviews = shuffled.slice(0, 3);
+                
+                featuredReviewsContainer.innerHTML = ''; // تنظيف الحاوية
+                
+                // 4. بناء البطاقات
+                for (const review of selectedReviews) {
+                    let placeTitle = "this amazing place";
+                    
+                    // جلب اسم المكان المرتبط بالتقييم
+                    try {
+                        const placeRes = await fetch(`https://hbnb.onrender.com/api/v1/places/${review.place_id}`);
+                        if (placeRes.ok) {
+                            const placeData = await placeRes.json();
+                            placeTitle = placeData.title;
+                        }
+                    } catch (e) {
+                        console.error("Could not fetch place name", e);
+                    }
+                    
+                    const starsHtml = '<i class="fa-solid fa-star"></i>'.repeat(review.rating);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'showcase-card';
+                    card.innerHTML = `
+                        <div class="stars">${starsHtml}</div>
+                        <p class="review-text">"${review.text}"</p>
+                        <a href="place.html?id=${review.place_id}" class="btn-visit-place">
+                            Visit ${placeTitle} <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    `;
+                    featuredReviewsContainer.appendChild(card);
+                }
+            } catch (error) {
+                console.error('Error loading featured reviews:', error);
+                featuredReviewsContainer.innerHTML = '';
+            }
+        }
+        
+        loadFeaturedReviews();
+    }
 });

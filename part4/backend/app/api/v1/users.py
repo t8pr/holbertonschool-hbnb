@@ -19,11 +19,15 @@ user_update_model = api.model('UserUpdate', {
 
 @api.route('/')
 class UserList(Resource):
-    """Resource for user list operations (Get, Post)"""
-
     @api.response(200, 'Users successfully retrieved')
+    @api.response(403, 'Admin privileges required')
+    @jwt_required()
     def get(self):
-        """Get all users"""
+        """Get all users (Admin Only)"""
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return {'error': 'Admin privileges required'}, 403
+            
         users = facade.get_all_users()
         return [user.to_dict() for user in users], 200
 

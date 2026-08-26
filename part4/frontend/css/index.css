@@ -262,10 +262,106 @@ main { padding: 120px 5% 80px 5%; }
     .places-grid { grid-template-columns: 1fr; gap: 25px; }
 }
 
-#nl-badge, 
-.nl-badge {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
+/* تنسيقات قسم التقييمات المميزة */
+.reviews-showcase {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+    padding: 0 5%;
+}
+
+.showcase-card {
+    background: var(--surface-white);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 350px;
+    flex: 1;
+    min-width: 300px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    border: 1px solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.showcase-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+}
+
+.showcase-card .stars {
+    color: #f5b041;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.showcase-card .review-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.showcase-card .btn-visit-place {
+    align-self: flex-start;
+    color: var(--accent-green);
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+}
+
+.showcase-card .btn-visit-place:hover {
+    gap: 12px;
+}
+
+/* تنسيقات الفوتر الاحترافي */
+.site-footer {
+    background-color: var(--surface-white, #ffffff);
+    border-top: 1px solid var(--border-soft, #e7e2d8);
+    padding: 25px 5%;
+    margin-top: auto; /* هذا السطر السحري يدفع الفوتر لأسفل الصفحة دائماً */
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    color: var(--text-muted, #717171);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.social-links {
+    display: flex;
+    gap: 20px;
+}
+
+.social-links a {
+    color: var(--text-muted, #717171);
+    font-size: 1.3rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--accent-green, #3a5a40);
+    transform: translateY(-3px);
+}
+
+/* استجابة الفوتر للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
 }

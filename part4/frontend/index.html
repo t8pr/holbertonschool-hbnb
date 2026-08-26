@@ -10,7 +10,9 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo">HBnB</a>
+        <a href="index.html" class="logo" style="display: flex; align-items: center;">
+            <img src="imgs/logo.png" alt="HBnB Logo" style="height: 40px; width: auto; object-fit: contain;">
+        </a>
         <nav class="nav-links">
             <a href="index.html">Home</a>
             <a href="add_place.html" id="add-place-link" style="display: none;">Host a Place</a>
@@ -56,18 +58,31 @@
             
         </section>
     </main>
-
+    <h2 class="section-title" style="margin-top: 40px;">What Our Guests Say</h2>
+    <section id="featured-reviews" class="reviews-showcase">
+        <p style="text-align: center; width: 100%; color: var(--text-muted);">Loading best experiences...</p>
+    </section>
     <script src="js/scripts.js"></script>
     <script>
-    const observer = new MutationObserver((mutations) => {
-        const netlifyBadge = document.getElementById('nl-badge');
-        if (netlifyBadge) {
-            netlifyBadge.remove();
-            observer.disconnect();
-        }
-    });
+        const observer = new MutationObserver((mutations) => {
+            const netlifyBadge = document.getElementById('nl-badge');
+            if (netlifyBadge) {
+                netlifyBadge.remove();
+                observer.disconnect();
+            }
+        });
 
-    observer.observe(document.body, { childList: true, subtree: true });
-</script>
+        observer.observe(document.body, { childList: true, subtree: true });
+    </script>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 HBnB Evolution. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

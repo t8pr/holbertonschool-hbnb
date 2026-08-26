@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBnB - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcfaf8;
+            color: #222222;
+            margin: 0;
+            padding: 40px 5%;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .admin-header h1 {
+            color: #3a5a40;
+            font-weight: 600;
+        }
+        .btn-back {
+            text-decoration: none;
+            color: #222222;
+            border: 1px solid #222222;
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background-color: #222222;
+            color: #ffffff;
+        }
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        }
+        .users-table th, .users-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #e7e2d8;
+        }
+        .users-table th {
+            background-color: #3a5a40;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        .users-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #717171;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-header">
+        <h1><i class="fa-solid fa-users-gear"></i> Registered Users</h1>
+        <a href="account.html" class="btn-back">Back to Dashboard</a>
+    </div>
+
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody id="users-table-body">
+            <tr>
+                <td colspan="4" class="loading">Loading users...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ربط ملف الجافاسكريبت -->
+    <script src="js/admin.js"></script>
+</body>
+</html>
